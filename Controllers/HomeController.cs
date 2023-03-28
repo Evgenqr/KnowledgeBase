@@ -26,8 +26,6 @@ namespace KnowledgeBase.Controllers
         {
             var documents = _context.Documents.ToList();
             ViewBag.Category = _context.Categories.ToList();
-            //ViewBag.Department = _context.Departments.ToList();
-
             return View(documents);
         }
 
@@ -37,7 +35,6 @@ namespace KnowledgeBase.Controllers
             ViewBag.Category = _context.Categories.ToList();
             ViewBag.Department = _context.Departments.ToList();
             ViewBag.Laws = _context.Laws.ToList();
-            //ViewData["Laws"] = new SelectList(_context.Laws, "Id", "Title");
             return View();
             
         }
@@ -78,11 +75,9 @@ namespace KnowledgeBase.Controllers
                         if (file.Length > 0)
                         {
                             var fileModel = new FileModel();
-                            //fileModel.Title = file.FileName;
                             fileModel.Title = Path.GetFileNameWithoutExtension(file.FileName);
                             fileModel.Extension = Path.GetExtension(file.FileName);
                             string wwwrootpath = _webHostEnvironment.WebRootPath;
-                            //https://localhost:7233/Documents/DownloadFile?fileId=9
                             string subDirPath = $"{document.Id}";
                             DirectoryInfo dirInfo = new DirectoryInfo(wwwrootpath + "/files/");
                             if (!dirInfo.Exists)
@@ -92,7 +87,6 @@ namespace KnowledgeBase.Controllers
                             dirInfo.CreateSubdirectory(subDirPath);
                             fileModel.Path = Path.Combine(Directory.GetCurrentDirectory(), wwwrootpath + "/files/" + subDirPath + "/", fileModel.Title+fileModel.Extension);
                             fileModels.Add(fileModel);
-                            Debug.WriteLine("++===================++");
                             using (var fileStream = new FileStream(fileModel.Path, FileMode.Create))
                             {
                                 await file.CopyToAsync(fileStream);
@@ -119,11 +113,6 @@ namespace KnowledgeBase.Controllers
             return View(document);
 
         }
-  
-
-
-
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

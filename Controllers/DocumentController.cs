@@ -22,25 +22,23 @@ namespace KnowledgeBase.Controllers
         }
         // GET: DocumentController
 
-      
-
         public ActionResult Index()
         {
             return View();
         }
-        [AllowAnonymous]
-        public async Task<IActionResult> DownloadFile(long fileId)
-        {
-            var file = await _context.Files.FindAsync(fileId);
+       // [AllowAnonymous]
+        //public async Task<IActionResult> DownloadFile(long fileId)
+        //{
+        //    var file = await _context.Files.FindAsync(fileId);
 
-            if (file != null)
-            {
-                var stream = new FileStream(file.Path, FileMode.Open, FileAccess.Read);
-                return File(stream, file.Extension, file.Title);
-            }
+        //    if (file != null)
+        //    {
+        //        var stream = new FileStream(file.Path, FileMode.Open, FileAccess.Read);
+        //        return File(stream, file.Extension, file.Title);
+        //    }
 
-            return NotFound();
-        }
+        //    return NotFound();
+        //}
 
         // GET: DocumentController/Details/5
         public ActionResult Details(long? id)
@@ -56,19 +54,6 @@ namespace KnowledgeBase.Controllers
             .Include(l => l.Laws)
             .Include(d => d.Files)
             .FirstOrDefault();
-
-           
-            //if (document != null)
-            //{
-            //    document.Files = _context.Documents
-            //                          .Where(d => d.Id == id)
-            //                          .Select(d => d.Files)
-            //                          .FirstOrDefault();
-            //}
-            //else
-            //{ 
-            //    return NotFound();
-            //}
             ViewBag.Document = document;
             ViewBag.Files = document.Files;
             return View();
