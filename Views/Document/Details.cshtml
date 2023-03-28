@@ -1,0 +1,89 @@
+﻿@{
+    var document = (KnowledgeBase.Models.Document)ViewBag.Document;
+}
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@{
+    ViewData["Title"] = document.Title;
+}
+<h4 class="card-title">
+    @document.Title
+</h4>
+<div class="editdoc">
+    @*{% if request.user.is_authenticated %}*@
+    <a class="text-decoration-none" href="view/">
+        Редактировать
+    </a>
+@*    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
+    <a asp-action="Details" asp-route-id="@Model.Id">Details</a> |
+    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>*@
+   
+    @*{% endif %}*@
+</div>
+
+
+
+<b>Категория:</b>
+<a class="text-decoration-none" href="/category/{{documents.category.slug}}/">
+    @document.Category.Title
+</a>
+<br> 
+@if (document.Department != null){
+<b>Отдел:</b>
+<a class="text-decoration-none" href="/departament/{{documents.departament.slug}}/">
+    @document.Department.Title
+</a>
+}
+<br>
+@if (document.Laws != null)
+{
+    <b> Закон: </b>
+       @foreach (var l in document.Laws)
+    {
+        <a class="text-decoration-none" href="/laws/{{l.slug}}/">
+            @l.shorttitle
+        </a>
+    }
+}
+<br>
+<div class="col-sm-9">
+    @document.Text
+</div>
+<b>Приложения: </b>
+       
+<div class="file" id="documents_{{documents.id}}_{{f.id}}">
+    <p class="filelogo" id="filelogo1">
+        @if (document.Files != null)
+        {
+            @foreach (var file in document.Files)
+            {
+                <div class="file" id="documents_'@document.Id'_'@file.Id''">
+                    
+                        <a class="text-decoration-none del-file" download href="/files/@document.Id/@file.Title@file.Extension", new { fileId=file.Id })" style="font-weight: bold;">
+                            @file.Title
+                        </a>
+                    
+                </div>
+            }
+        }
+        
+
+
+
+        размер\формат
+    </p>
+
+</div>
+      
+
+<br>
+    Создан: @document.DateCreate.ToShortDateString()
+<br>
+    Обновлён: @document.DateUpdate
+<br>
+    Автор: 
+

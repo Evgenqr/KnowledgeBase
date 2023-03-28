@@ -1,0 +1,24 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - База знаний</title>
+    @await Html.PartialAsync("Styles")
+</head>
+<body>
+    @await Html.PartialAsync("Header")
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    @await Html.PartialAsync("Footer")
+    @await Html.PartialAsync("Scripts")
+    @*@await RenderSectionAsync("Scripts", required: false)*@
+</body>
+</html>

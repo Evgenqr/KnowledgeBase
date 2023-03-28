@@ -1,0 +1,95 @@
+﻿
+@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+<header>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <a class="navbar-brand" href="/admin">
+
+                    <img src="~/images/logo.png" alt="" width="250" height="110">
+                    @*<a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>*@
+                </a>
+            </div>
+            <div class="col-sm-6">
+                <ul class="nav position-relative">
+                    @*                    {% if request.user.is_authenticated %}
+                    <li class="nav-item dropdown position-absolute top-0 end-0">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Имя
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                    <li><a class="dropdown-item" href="{% url 'createdocument' %} ">Добавить документ</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                    <form action="{% url 'logoutuser' %}" method="POST">
+                    {% csrf_token %}
+                    <li><button type="submit" class="btn btn-light">Выйти</button></li>
+                    </form>
+                    </li>
+                    </ul>
+                    </li>
+                    {% else %}*@
+                    <li class="nav-item dropdown position-absolute top-0 end-0">
+                        <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            Личный кабинет
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                            <li><a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="">Авторизаци</a></li>
+
+                        </ul>
+                    </li>
+                    @*{% endif %}*@
+                </ul>
+                <div class="col-sm"> </div>
+                <div class="col-sm"> </div>
+                <div class="col-sm">
+                    @*                 <form class="d-flex" action="{% url 'search' %}" method="get">
+                    <input class="form-control me-2" name="q" type="search" placeholder="Поиск" aria-label="Поиск">
+                    <button class="btn btn-outline-success" type="submit">Поиск</button>
+                    </form>*@
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#007c84;">
+            <ul class="navbar-nav mr-auto mb-3 mb-lg-0 ">
+                <li class="nav-item dropdown">
+                    <a class="active nav-link dropbtn" aria-current="page" href="/"> Главная </a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="active  nav-link dropbtn" href="/category" id="navbarDropdown" role="button" aria-expanded="false">
+                        Акты антимонопольного органа
+                    </a>
+                    <ul class="dropdown-menu dropdown-content" aria-labelledby="navbarDropdown" style="left:0;">
+
+                        <li><a class=" dropdown-item" href="/departament">Отдел антимонопольного контроля</a></li>
+                        <li><a class=" dropdown-item" href="/departament">Отдел естественных монополий</a></li>
+                        <li><a class=" dropdown-item" href="/departament">Отдел контроля закупок</a></li>
+                        <li><a class=" dropdown-item" href="/departament">Отдел товарных и финансовых рынков</a></li>
+
+                    </ul>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="active nav-link dropbtn " id="navbarDropdown" aria-current="page" href="/category//">
+                        Судебные акты
+                    </a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="active nav-link dropbtn" aria-current="page" href="/category//">
+                        Акты органов прокуратуры
+                    </a>
+                </li>
+
+            </ul>
+
+
+        </nav>
+    </div>
+</header>
