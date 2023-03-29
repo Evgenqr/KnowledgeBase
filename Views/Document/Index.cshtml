@@ -1,0 +1,36 @@
+﻿@model IEnumerable<Document>
+@{
+
+    ViewData["Title"] = "Главная страница";
+}
+
+<h1>База знаний Курского УФАС России</h1>
+<div class="grey-card">
+    <a href="/create">Создать</a>
+    @foreach (var document in Model)
+    {
+        <div class="row" style="padding-bottom: 1rem;">
+            <div class="col-sm-10">
+                <b style="font-size: 12pt;">
+                    <a href="/document/@document.Id">@document.Title</a>
+                </b>
+            </div>
+            <div class="col-sm-2 text-right">
+                @document.DateCreate.ToShortDateString()
+            </div>
+            <div class="row">
+                <div class="col-sm-9">
+                    <a href="/category" class="badge badge-disabled" style="margin: 2px 0; padding: 6px 10px;">
+                        @document.Category.Title
+                    </a>
+                </div>
+
+            </div>
+        </div>
+
+    }
+</div>
+
+
+
+

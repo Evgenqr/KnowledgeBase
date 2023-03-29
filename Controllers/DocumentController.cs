@@ -8,6 +8,10 @@ using System.Reflection.Metadata;
 using System.Xml.Linq;
 using KnowledgeBase.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Build.Evaluation;
+using System.Diagnostics;
+using Microsoft.AspNetCore.Hosting;
+using System.Drawing.Drawing2D;
 
 namespace KnowledgeBase.Controllers
 {
@@ -15,34 +19,26 @@ namespace KnowledgeBase.Controllers
     {
 
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public DocumentController(ApplicationDbContext context)
+        public DocumentController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
         // GET: DocumentController
-
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            return View();
+            var documents = _context.Documents.ToList();
+            ViewBag.Category = _context.Categories.ToList();
+            return View(documents);
         }
-       // [AllowAnonymous]
-        //public async Task<IActionResult> DownloadFile(long fileId)
-        //{
-        //    var file = await _context.Files.FindAsync(fileId);
-
-        //    if (file != null)
-        //    {
-        //        var stream = new FileStream(file.Path, FileMode.Open, FileAccess.Read);
-        //        return File(stream, file.Extension, file.Title);
-        //    }
-
-        //    return NotFound();
-        //}
 
         // GET: DocumentController/Details/5
         public ActionResult Details(long? id)
         {
+           
+
             if (id == null || _context.Documents == null)
             {
                 return NotFound();
@@ -102,24 +98,58 @@ namespace KnowledgeBase.Controllers
         }
 
         // GET: DocumentController1/Delete/5
-        public ActionResult Delete(int id)
+        public async Task<IActionResult> Delete(long? id)
         {
-            return View();
+            if (id == null || _context.Documents == null)
+            {
+                return NotFound();
+            }
+            var document = await _context.Documents
+                .Include(d => d.Category)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (document == null)
+            {
+                return NotFound();
+            }
+            return View(document);
         }
 
-        // POST: DocumentController1/Delete/5
-        [HttpPost]
+        // POST: Documents/Delete/5
+        [HttpPost, ActionName("DeleteOk")]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            try
+              if (_context.Documents == null)
             {
-                return RedirectToAction(nameof(Index));
+                return Problem("Документ отсутствует.");
             }
-            catch
+           // var document = await _context.Documents.FindAsync(id);
+            var document = await _context.Documents
+            .Include(d => d.Files)
+            .FirstOrDefaultAsync(d => d.Id == id);
+
+            if (document != null)
             {
-                return View();
+                var files = await _context.Files.Where(f => f.DocumentId == id).ToListAsync();
+                foreach (var file in files)
+                {
+                    string wwwrootpath = _webHostEnvironment.WebRootPath;
+                    string subDirPath = $"{document.Id}";
+                    var path = Path.Combine(Directory.GetCurrentDirectory(), wwwrootpath + "/files/" + subDirPath);
+                    if (Directory.Exists(path))
+                    {
+                       Directory.Delete(path, true);
+                    }
+                }
+                _context.Documents.Remove(document);
             }
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index", "Home");
+        }
+
+        private bool DocumentExists(long id)
+        {
+            return (_context.Documents?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

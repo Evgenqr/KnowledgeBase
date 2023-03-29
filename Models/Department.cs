@@ -5,6 +5,9 @@ namespace KnowledgeBase.Models
 {
     public class Department
     {
+        /// <summary>
+        /// Id отдела
+        /// </summary>
         public int Id { get; set; }
         [Display(Name = "Название отдела")]
         [MaxLength(50)]

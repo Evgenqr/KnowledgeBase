@@ -38,6 +38,10 @@ app.UseRouting();
 
 app.UseAuthorization();
 
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.MapControllerRoute(
         name: "DocumentDetails",
@@ -49,9 +53,11 @@ app.MapControllerRoute(
     pattern: "create",
     defaults: new { controller = "Home", action = "Create" });
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
 //app.MapRazorPages();
+
+app.MapControllerRoute(
+        name: "DocumentDelete",
+        pattern: "document/delete/{id}",
+        defaults: new { controller = "Document", action = "Delete" });
 
 app.Run();

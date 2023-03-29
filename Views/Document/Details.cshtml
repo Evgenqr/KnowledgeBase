@@ -52,18 +52,14 @@
         {
             @foreach (var file in document.Files)
             {
-                <div class="file" id="documents_'@document.Id'_'@file.Id''">
-                    
-                        <a class="text-decoration-none del-file" download href="/files/@document.Id/@file.Title@file.Extension", new { fileId=file.Id })" style="font-weight: bold;">
-                            @file.Title
-                        </a>
-                    
+                <div class="file" id="file_@file.Id">
+                    <a class="text-decoration-none del-file" download href="/files/@document.Id/@file.Title@file.Extension", new { fileId=file.Id })" style="font-weight: bold;">
+                        @file.Title
+                    </a>
                 </div>
             }
         }
-      размер\формат
     </p>
-
 </div>
 <br>
     Создан: @document.DateCreate.ToShortDateString()
@@ -71,4 +67,6 @@
     Обновлён: @document.DateUpdate
 <br>
     Автор: 
+<br>
+<a asp-action="Delete" asp-route-id="@document.Id"></a>
 
