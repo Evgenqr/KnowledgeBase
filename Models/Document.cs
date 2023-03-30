@@ -35,9 +35,11 @@ namespace KnowledgeBase.Models
         public string? Text { get; set; }
         [Display(Name = "Дата создания")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime DateCreate { get; set; }
         [Display(Name = "Дата обновления")]
         [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public DateTime? DateUpdate { get; set; }
         /// <summary>
         /// Приложения (файлы)

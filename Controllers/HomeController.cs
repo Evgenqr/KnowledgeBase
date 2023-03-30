@@ -62,7 +62,7 @@ namespace KnowledgeBase.Controllers
                         }
                     }
                         document.Laws = selectedLaws;
-                    }
+                }
                 //await _context.SaveChangesAsync();
                 _context.Add(document);
                 await _context.SaveChangesAsync();

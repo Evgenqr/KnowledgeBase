@@ -12,6 +12,7 @@ using Microsoft.Build.Evaluation;
 using System.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using System.Drawing.Drawing2D;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace KnowledgeBase.Controllers
 {
@@ -92,25 +93,80 @@ namespace KnowledgeBase.Controllers
             }
         }
 
-        // GET: DocumentController1/Edit/5
-        public ActionResult Edit(int id)
+        // GET: Documents/Edit/5
+        public async Task<IActionResult> Edit(long? id)
         {
-            return View();
+            if (id == null || _context.Documents == null)
+            {
+                return NotFound();
+            }
+
+            var document = await _context.Documents.FindAsync(id);
+            var DateCreate = document.DateCreate;
+            if (document == null)
+            {
+                return NotFound();
+            }
+            ViewBag.Category = _context.Categories.ToList();
+            ViewBag.Department = _context.Departments.ToList();
+            ViewBag.Laws = _context.Laws.ToList();
+            ViewBag.Files = _context.Files.ToList();
+            return View(document);
         }
 
-        // POST: DocumentController1/Edit/5
+        // POST: Documents/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Title,CategoryId,Laws,DepartmentId,Text, DateCreate, DateUpdate")] Models.Document document, int[] Laws)
         {
-            try
+            var DateCreate = document.DateCreate;
+            if (id != document.Id)
             {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    document.DateCreate = DateCreate;
+                    document.DateUpdate = DateTime.UtcNow;
+                    // Обновление поля Laws модели Document
+                    var selectedLaws = HttpContext.Request.Form["selectedLaws"].ToString().Split(',');
+                    document.Laws = new List<Law>();
+                    foreach (var selectedLaw in selectedLaws)
+                    {
+                        if (!string.IsNullOrEmpty(selectedLaw))
+                        {
+                            var lawId = Convert.ToInt32(selectedLaw);
+                            var law = await _context.Laws.FirstOrDefaultAsync(l => l.Id == lawId);
+                            if (law != null)
+                            {
+                                document.Laws.Add(law);
+                            }
+                        }
+                    }
+                    _context.Update(document);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!DocumentExists(document.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
-            catch
-            {
-                return View();
-            }
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", document.CategoryId);
+            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Id", document.DepartmentId);
+            return View(document);
         }
 
         // GET: DocumentController1/Delete/5

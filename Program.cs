@@ -60,4 +60,8 @@ app.MapControllerRoute(
         pattern: "document/delete/{id}",
         defaults: new { controller = "Document", action = "Delete" });
 
+app.MapControllerRoute(
+        name: "DocumentEdit",
+        pattern: "document/{id}/edit",
+        defaults: new { controller = "Document", action = "Edit" });
 app.Run();

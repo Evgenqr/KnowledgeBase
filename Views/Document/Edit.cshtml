@@ -1,0 +1,29 @@
+﻿@model KnowledgeBase.Models.Document
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Document</h4>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <hr>
+            <form asp-action="Edit"  enctype="multipart/form-data" asp-controller="Document">
+                @await Html.PartialAsync("DocumentForm")
+            </form>
+        </div>
+        <div>
+            @Html.ActionLink("Отмена", "Details", new { id = Model.Id })
+        </div>
+    </div>
+</div>
+
+
+@*
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+*@

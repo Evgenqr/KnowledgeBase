@@ -9,14 +9,9 @@
 </h4>
 <div class="editdoc">
     @*{% if request.user.is_authenticated %}*@
-    <a class="text-decoration-none" href="view/">
+    <a class="text-decoration-none" href="/document/@document.Id/edit">
         Редактировать
     </a>
-@*    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Details" asp-route-id="@Model.Id">Details</a> |
-    <a asp-action="Delete" asp-route-id="@Model.Id">Delete</a>*@
-   
-    @*{% endif %}*@
 </div>
 
 <b>Категория:</b>
@@ -33,13 +28,15 @@
 <br>
 @if (document.Laws != null)
 {
-    <b> Закон: </b>
-       @foreach (var l in document.Laws)
-    {
-        <a class="text-decoration-none" href="/laws/{{l.slug}}/">
-            @l.shorttitle
-        </a>
-    }
+    <span>
+        <b> Закон: </b>
+           @foreach (var l in document.Laws)
+        {
+            <a class="text-decoration-none"  href="/laws/{{l.slug}}/">
+                @l.shorttitle
+            </a>
+        }
+    </span>
 }
 <br>
 <div class="col-sm-9">
@@ -64,8 +61,12 @@
 <br>
     Создан: @document.DateCreate.ToShortDateString()
 <br>
-    Обновлён: @document.DateUpdate
-<br>
+@if (document.DateUpdate != null)
+{
+
+    <span> Обновлён: @document.DateUpdate</span>
+    <br>
+}
     Автор: 
 <br>
 <a asp-action="Delete" asp-route-id="@document.Id">Удалить</a>
