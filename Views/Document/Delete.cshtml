@@ -35,7 +35,8 @@
     
     <form asp-action="DeleteOk">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Удалить" class="btn btn-danger"/> |
-        <a asp-controller="Home"  asp-action="Index">Вернуться</a>
+        <input type="submit" value="Удалить" class="btn btn-danger"/> 
+@*        <a asp-controller="document" asp-action="GoBack">Вернуться</a>*@
+        @Html.ActionLink("Отмена", "Details", new { id = Model.Id })
     </form>
 </div>

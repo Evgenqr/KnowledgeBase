@@ -21,10 +21,26 @@ namespace KnowledgeBase.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
+        
+
         public DocumentController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
             _webHostEnvironment = webHostEnvironment;
+        }
+        public ActionResult Cancel(int id)
+        {
+            // Получение информации о записи
+            var document = _context.Documents.Find(id);
+
+            // Если запись не найдена, перенаправляем на страницу ошибки
+            if (document == null)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+
+            // Перенаправляем на предыдущую страницу
+            return RedirectToAction("Details", new { id = document.Id });
         }
         // GET: DocumentController
         public IActionResult Index()
