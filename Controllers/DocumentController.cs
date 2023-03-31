@@ -100,7 +100,6 @@ namespace KnowledgeBase.Controllers
             {
                 return NotFound();
             }
-
             var document = await _context.Documents.FindAsync(id);
             var DateCreate = document.DateCreate;
             if (document == null)
@@ -111,6 +110,7 @@ namespace KnowledgeBase.Controllers
             ViewBag.Department = _context.Departments.ToList();
             ViewBag.Laws = _context.Laws.ToList();
             ViewBag.Files = _context.Files.ToList();
+            //ViewBag.Files = document.Files;
             return View(document);
         }
 
@@ -164,8 +164,10 @@ namespace KnowledgeBase.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Files = document.Files;
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", document.CategoryId);
             ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Id", document.DepartmentId);
+         
             return View(document);
         }
 

@@ -18,7 +18,7 @@
     </div>
 
     @await Html.PartialAsync("Footer")
-    @await Html.PartialAsync("Scripts")
-    @*@await RenderSectionAsync("Scripts", required: false)*@
+    @*@await Html.PartialAsync("Scripts")*@
+    @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

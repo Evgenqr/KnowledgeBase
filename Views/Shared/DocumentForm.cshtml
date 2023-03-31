@@ -1,5 +1,73 @@
 ﻿@model KnowledgeBase.Models.Document
 
+@{
+    ViewBag.Title = (Model.Id > 0) ? "Редактирование документа" : "Создание документа";
+}
+<h2>@ViewBag.Title</h2>
+@using(Html.BeginForm((Model.Id>0)?"Edit":"Create",
+"Document", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    // поля формы
+    @Html.LabelFor(model => model.Title)
+    @Html.TextBoxFor(model => model.Title)
+
+    @Html.LabelFor(model => model.CategoryId)
+    @Html.DropDownListFor(model => model.CategoryId, new SelectList(ViewBag.Categories, "CategoryId", "Name"))
+
+    @Html.LabelFor(model => model.DepartmentId)
+    @Html.DropDownListFor(model => model.DepartmentId, new SelectList(ViewBag.Departments, "DepartmentId", "Name"))
+
+    // таблица с приложенными файлами
+    @if (Model.Files != null && Model.Files.Any())
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Имя файла</th>
+                    <th>Удалить</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var file in Model.Files)
+                {
+                    <tr>
+                        <td>@file.Title</td>
+                        <td>
+                            @Html.CheckBox("deleteFile" + file.Id)
+                            @Html.Hidden("fileId", file.Id)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+
+    @Html.LabelFor(model => model.Text)
+    @Html.TextAreaFor(model => model.Text)
+
+    @Html.LabelFor(model => model.Laws)
+    @Html.ListBoxFor(model => model.Laws, new MultiSelectList(ViewBag.Laws, "LawId", "Name"))
+
+    <button type="submit">@((Model.Id > 0) ? "Сохранить изменения" : "Создать")</button>
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+@*@model KnowledgeBase.Models.Document
+
 
 <div class="col-sm-6">
     <label asp-for="Title" class="control-label"></label>
@@ -33,18 +101,6 @@
     <textarea asp-for="Text" style="height:140px;" class="form-control"></textarea>
     <span asp-validation-for="Text" class="text-danger"></span>
 </div>
-
-@*<div class="col-sm-4">
-                    <label asp-for="DateCreate" class="control-label"></label>
-                    <input asp-for="DateCreate" class="form-control" />
-                    <span asp-validation-for="DateCreate" class="text-danger"></span>
-                </div>
-                <div class="col-sm-4">
-                    <label asp-for="DateUpdate" class="control-label"></label>
-                    <input asp-for="DateUpdate" class="form-control" />
-                    <span asp-validation-for="DateUpdate" class="text-danger"></span>
-                </div>
-*@
 <div class="col-sm-6">
     <label asp-for="Files" class="control-label"></label>
     <input asp-for="Files" type="file" multiple class="form-control" />
@@ -57,4 +113,4 @@
 </div>
 <div class="form-group">
     <div class="col-sm-4"><button class="btn btn-info">Сохранить</button></div>
-</div>
+</div>*@

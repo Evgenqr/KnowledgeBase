@@ -1,26 +1,63 @@
 ﻿@model KnowledgeBase.Models.Document
-
 @{
-    ViewData["Title"] = "Edit";
+    var document = (KnowledgeBase.Models.Document)ViewBag.Document;
+}
+@{
+    ViewData["Title"] = "Редактирование";
 }
 
-<h1>Edit</h1>
-
-<h4>Document</h4>
+<h1>Редактирование</h1>
 <div class="container">
     <div class="row">
         <div class="col-md-8 mx-auto">
             <hr>
             <form asp-action="Edit"  enctype="multipart/form-data" asp-controller="Document">
                 @await Html.PartialAsync("DocumentForm")
+             <b>Приложения: </b>
+               <div class="form-group">
+                    <div class="col-md-10">
+                        
+                            @if (document!= null && Model.Files != null)
+                            {
+                                @foreach (var file in Model.Files)
+                                {
+                                    <div class="file" id="file_@file.Id">
+                                        <a class="text-decoration-none del-file" download href="/files/@document.Id/@file.Title@file.Extension", new { fileId=file.Id })" style="font-weight: bold;">
+                                            @file.Title
+                                        </a>
+                                        @Html.ActionLink("Удалить", "DeleteFile", new { fileId = file.Id }, new { @class = "delete-link" })
+                                    </div>
+
+                                   @* <li>
+                                        @Html.ActionLink(file.Title, "DownloadFile", new { fileId = file.Id })
+                                        @Html.ActionLink("Удалить", "DeleteFile", new { fileId = file.Id }, new { @class = "delete-link" })
+                                    </li>*@
+                                }
+                             }
+                     
+                    </div>
+                </div>
+
+               
             </form>
+            
         </div>
         <div>
             @Html.ActionLink("Отмена", "Details", new { id = Model.Id })
         </div>
     </div>
 </div>
-
+    @section Scripts {
+        <script>
+            $(function () {
+                $(".delete-link").click(function () {
+                    if (!confirm("Вы уверены, что хотите удалить этот файл?")) {
+                        return false;
+                    }
+                });
+            });
+        </script>
+}
 
 @*
 @section Scripts {
