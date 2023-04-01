@@ -25,8 +25,8 @@
     @document.Department.Title
 </a>
 }
-<br>
-@if (document.Laws != null)
+<br/>
+@if (document.Laws.Count > 0)
 {
     <span>
         <b> Закон: </b>
@@ -38,15 +38,14 @@
         }
     </span>
 }
-<br>
 <div class="col-sm-9">
     @document.Text
 </div>
-<b>Приложения: </b>
-<div class="file" id="documents_{{documents.id}}_{{f.id}}">
-    <p class="filelogo" id="filelogo1">
-        @if (document.Files != null)
-        {
+@if (document.Files.Count > 0)
+{
+    <b>Приложения: </b>
+    <div class="file" id="documents_{{documents.id}}_{{f.id}}">
+        <p class="filelogo" id="filelogo1">
             @foreach (var file in document.Files)
             {
                 <div class="file" id="file_@file.Id">
@@ -55,19 +54,14 @@
                     </a>
                 </div>
             }
-        }
-    </p>
-</div>
-<br>
-    Создан: @document.DateCreate.ToShortDateString()
+        </p>
+    </div>
+}
+Создан: @document.DateCreate.ToShortDateString()
 <br>
 @if (document.DateUpdate != null)
 {
-
     <span> Обновлён: @document.DateUpdate</span>
-    <br>
-}
-    Автор: 
-<br>
-<a asp-action="Delete" asp-route-id="@document.Id">Удалить</a>
 
+}
+  @*  Автор: *@

@@ -1,116 +1,110 @@
 ﻿@model KnowledgeBase.Models.Document
 
 @{
-    ViewBag.Title = (Model.Id > 0) ? "Редактирование документа" : "Создание документа";
+    var document = (KnowledgeBase.Models.Document)ViewBag.Document;
 }
-<h2>@ViewBag.Title</h2>
-@using(Html.BeginForm((Model.Id>0)?"Edit":"Create",
-"Document", FormMethod.Post))
+<hr>
+@using (Html.BeginForm((document != null && document.Id > 0) ? "Edit" : "Create", "Document", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    @Html.AntiForgeryToken()
-
-    // поля формы
-    @Html.LabelFor(model => model.Title)
-    @Html.TextBoxFor(model => model.Title)
-
-    @Html.LabelFor(model => model.CategoryId)
-    @Html.DropDownListFor(model => model.CategoryId, new SelectList(ViewBag.Categories, "CategoryId", "Name"))
-
-    @Html.LabelFor(model => model.DepartmentId)
-    @Html.DropDownListFor(model => model.DepartmentId, new SelectList(ViewBag.Departments, "DepartmentId", "Name"))
-
-    // таблица с приложенными файлами
-    @if (Model.Files != null && Model.Files.Any())
-    {
-        <table>
-            <thead>
-                <tr>
-                    <th>Имя файла</th>
-                    <th>Удалить</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var file in Model.Files)
-                {
-                    <tr>
-                        <td>@file.Title</td>
-                        <td>
-                            @Html.CheckBox("deleteFile" + file.Id)
-                            @Html.Hidden("fileId", file.Id)
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-
-    @Html.LabelFor(model => model.Text)
-    @Html.TextAreaFor(model => model.Text)
-
-    @Html.LabelFor(model => model.Laws)
-    @Html.ListBoxFor(model => model.Laws, new MultiSelectList(ViewBag.Laws, "LawId", "Name"))
-
-    <button type="submit">@((Model.Id > 0) ? "Сохранить изменения" : "Создать")</button>
-}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-@*@model KnowledgeBase.Models.Document
-
-
-<div class="col-sm-6">
-    <label asp-for="Title" class="control-label"></label>
-    <input asp-for="Title" class="form-control" />
-    <span asp-validation-for="Title" class="text-danger"></span>
-</div>
-<div class="col-sm-4">
-    <label asp-for="Category" class="control-label"></label>
-    <select asp-for="CategoryId" class="form-control"
+    @*@Html.AntiForgeryToken()*@
+    // поля формы  
+    //Заголовок
+    <div class="col-sm-6">
+        <label asp-for="Title" class="control-label"></label>
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    //Категория
+    <div class="col-sm-4">
+        <label asp-for="Category" class="control-label"></label>
+        <select asp-for="CategoryId" class="form-control"
             asp-items="@(new SelectList(ViewBag.Category, "Id", "Title"))">
-        <option value="">Выберите категорию</option>
-    </select>
-    <span asp-validation-for="CategoryId" class="text-danger"></span>
-</div>
-
-<div class="col-sm-4">
-    <label asp-for="Department" class="control-label"></label>
-    <select asp-for="DepartmentId" class="form-control"
+            <option value="">Выберите категорию</option>
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+    //Отдел    
+    <div class="col-sm-4">
+        <label asp-for="Department" class="control-label"></label>
+        <select asp-for="DepartmentId" class="form-control"
             asp-items="@(new SelectList(ViewBag.Department, "Id", "Title"))">
-        <option value="">Выберите отдел</option>
-    </select>
-    <span asp-validation-for="DepartmentId" class="text-danger"></span>
-</div>
-<div class="col-sm-4">
-    <label asp-for="Laws" class="control-label"></label>
-    <select asp-for="Laws" name="selectedLaws" asp-items="@(new SelectList(ViewBag.Laws, "Id", "Title"))" class="form-control" multiple></select>
-    <span asp-validation-for="Laws" class="text-danger"></span>
-</div>
-<div class="col-sm-10">
-    <label asp-for="Text" class="control-label"></label>
-    <textarea asp-for="Text" style="height:140px;" class="form-control"></textarea>
-    <span asp-validation-for="Text" class="text-danger"></span>
-</div>
-<div class="col-sm-6">
-    <label asp-for="Files" class="control-label"></label>
-    <input asp-for="Files" type="file" multiple class="form-control" />
-    <span asp-validation-for="Files" class="text-danger"></span>
-</div>
-<div class="description col-sm-12">
-    Максимальный размер файла: <strong>50 МБ</strong>.
-    <br>Разрешённые типы файлов:
-    <strong>txt doc docx xls xlsx pdf png jpg bmp rar zip ppt pptx rtf gif</strong>.
-</div>
-<div class="form-group">
-    <div class="col-sm-4"><button class="btn btn-info">Сохранить</button></div>
-</div>*@
+            <option value="">Выберите отдел</option>
+        </select>
+        <span asp-validation-for="DepartmentId" class="text-danger"></span>
+     </div>
+     //Закон
+    <div class="col-sm-4">
+        <label asp-for="Laws" class="control-label"></label>
+        <select asp-for="Laws" class="form-control" 
+            asp-items="@(new SelectList(ViewBag.Laws, "Id", "Title"))" multiple></select>
+        <span asp-validation-for="Laws" class="text-danger"></span>
+    </div>
+    //Текст
+    <div class="col-sm-10">
+        <label asp-for="Text" class="control-label"></label>
+        <textarea asp-for="Text" style="height:140px;" class="form-control"></textarea>
+        <span asp-validation-for="Text" class="text-danger"></span>
+    </div>
+    //Приложения
+    <div class="col-sm-6">
+        <label asp-for="Files" class="control-label"></label>
+        <input asp-for="Files" type="file" multiple class="form-control" />
+        <span asp-validation-for="Files" class="text-danger"></span>
+    </div>
+    <div class="description col-sm-12">
+        Максимальный размер файла: <strong>50 МБ</strong>.
+        <br>Разрешённые типы файлов:
+        <strong>txt doc docx xls xlsx pdf png jpg bmp rar zip ppt pptx rtf gif</strong>.
+    </div>
+    // таблица с приложенными файлами
+    <div class="file" id="documents_{{documents.id}}_{{f.id}}">
+        Приложения2:
+        @if (document != null && document.Files != null && document.Files.Any())
+        {
+            <p>Приложения2:</p>
+            <div class="file" id="file_@document.Id">
+                @document.Title
+            </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Имя файла</th>
+                        <th>Удалить</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var file in document.Files)
+                    {
+                        <tr>
+                            <td>@file.Title</td>
+                            <td>
+                                @Html.CheckBox("deleteFile" + file.Id)
+                                @Html.Hidden("fileId", file.Id)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+
+        <b>Приложения3: </b>
+        <div class="file" id="documents_{{documents.id}}_{{f.id}}">
+            @if (document != null && document.Files != null)
+            {
+                @foreach (var file in document.Files)
+                {
+                    <div class="file" id="file_@file.Id">
+                        @file.Title
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <div class="form-group">
+    <div class="col-sm-4">
+        <button class="btn btn-info" type="submit">@((document != null && document.Id > 0) ? "Сохранить изменения" : "Создатьx")</button>
+    </div>
+    </div>
+    
+
+}

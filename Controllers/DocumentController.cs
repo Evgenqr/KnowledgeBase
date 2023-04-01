@@ -3,16 +3,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
-using System.IO;
-using System.Reflection.Metadata;
-using System.Xml.Linq;
 using KnowledgeBase.Data;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.Build.Evaluation;
-using System.Diagnostics;
-using Microsoft.AspNetCore.Hosting;
-using System.Drawing.Drawing2D;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Reflection.Metadata;
 
 namespace KnowledgeBase.Controllers
 {
@@ -33,13 +27,11 @@ namespace KnowledgeBase.Controllers
         {
             // Получение информации о записи
             var document = _context.Documents.Find(id);
-
             // Если запись не найдена, перенаправляем на страницу ошибки
             if (document == null)
             {
                 return RedirectToAction("Error", "Home");
             }
-
             // Перенаправляем на предыдущую страницу
             return RedirectToAction("Details", new { id = document.Id });
         }
@@ -54,8 +46,6 @@ namespace KnowledgeBase.Controllers
         // GET: DocumentController/Details/5
         public ActionResult Details(long? id)
         {
-           
-
             if (id == null || _context.Documents == null)
             {
                 return NotFound();
@@ -72,25 +62,86 @@ namespace KnowledgeBase.Controllers
             return View();
         }
 
-        // GET: DocumentController1/Create
-        public ActionResult Create()
+        // GET: Create
+        public IActionResult Create()
         {
+            ViewBag.Category = _context.Categories.ToList();
+            ViewBag.Department = _context.Departments.ToList();
+            ViewBag.Laws = _context.Laws.ToList();
             return View();
         }
 
-        // POST: DocumentController1/Create
+        // POST: Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<IActionResult> Create([Bind("Title, CategoryId, DepartmentId, Laws, Text, File, FileId")] Models.Document document, int[] Laws, List<IFormFile> files)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    document.DateCreate = DateTime.UtcNow;
+                    List<Law> selectedLaws = new List<Law>();
+                    if (Laws != null)
+                    {
+                        foreach (int lawId in Laws)
+                        {
+                            Law law = await _context.Laws.FindAsync(lawId);
+                            if (law != null)
+                            {
+                                selectedLaws.Add(law);
+                            }
+                        }
+                    }
+                    document.Laws = selectedLaws;
+                }
+                _context.Add(document);
+                await _context.SaveChangesAsync();
+                if (files != null)
+                {
+                    var fileModels = new List<FileModel>();
+                    foreach (var file in files)
+                    {
+                        if (file.Length > 0)
+                        {
+                            var fileModel = new FileModel();
+                            fileModel.Title = Path.GetFileNameWithoutExtension(file.FileName);
+                            fileModel.Extension = Path.GetExtension(file.FileName);
+                            string wwwrootpath = _webHostEnvironment.WebRootPath;
+                            string subDirPath = $"{document.Id}";
+                            DirectoryInfo dirInfo = new DirectoryInfo(wwwrootpath + "/files/");
+                            if (!dirInfo.Exists)
+                            {
+                                dirInfo.Create();
+                            }
+                            dirInfo.CreateSubdirectory(subDirPath);
+                            fileModel.Path = Path.Combine(Directory.GetCurrentDirectory(), wwwrootpath + "/files/" + subDirPath + "/", fileModel.Title + fileModel.Extension);
+                            fileModels.Add(fileModel);
+                            using (var fileStream = new FileStream(fileModel.Path, FileMode.Create))
+                            {
+                                await file.CopyToAsync(fileStream);
+                            }
+                        }
+                    }
+                    // Связываем файлы с документом
+                    document.Files = fileModels;
+                }
+                // Сохраняем документ в базе данных
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Details", new { id = document.Id });
+               // return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (DbUpdateException /* ex */)
             {
-                return View();
+                //Log the error (uncomment ex variable name and write a log.)
+                ModelState.AddModelError("", "Unable to save changes. " +
+                    "Try again, and if the problem persists, " +
+                    "see your system administrator.");
+              // return RedirectToAction("Index", "Home");
             }
+            
+           return View(document);
+
         }
 
         // GET: Documents/Edit/5
@@ -150,6 +201,7 @@ namespace KnowledgeBase.Controllers
                     }
                     _context.Update(document);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction("Details", new { id = document.Id });
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -162,7 +214,7 @@ namespace KnowledgeBase.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+               // return RedirectToAction(nameof(Index));
             }
             ViewBag.Files = document.Files;
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", document.CategoryId);

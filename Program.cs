@@ -51,7 +51,7 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "CreateDocument",
     pattern: "create",
-    defaults: new { controller = "Home", action = "Create" });
+    defaults: new { controller = "Document", action = "Create" });
 
 //app.MapRazorPages();
 
@@ -64,4 +64,6 @@ app.MapControllerRoute(
         name: "DocumentEdit",
         pattern: "document/{id}/edit",
         defaults: new { controller = "Document", action = "Edit" });
+
+
 app.Run();
