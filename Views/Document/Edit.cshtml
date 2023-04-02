@@ -13,16 +13,16 @@
     </div>
 </div>
 <a asp-action="Delete" asp-route-id="@Model.Id">Удалить</a>
-    @section Scripts {
-        <script>
-            $(function () {
-                $(".delete-link").click(function () {
-                    if (!confirm("Вы уверены, что хотите удалить этот файл?")) {
-                        return false;
-                    }
-                });
+@section Scripts {
+    <script>
+        $(function () {
+            $(".delete-link").click(function () {
+                if (!confirm("Вы уверены, что хотите удалить этот файл?")) {
+                    return false;
+                }
             });
-        </script>
+        });
+    </script>
 }
 @*
 @section Scripts {

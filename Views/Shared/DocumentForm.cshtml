@@ -1,13 +1,11 @@
-﻿@model KnowledgeBase.Models.Document
+﻿@model Document
 
-@{
-    var document = (KnowledgeBase.Models.Document)ViewBag.Document;
-}
 <hr>
-@using (Html.BeginForm((document != null && document.Id > 0) ? "Edit" : "Create", "Document", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm((Model != null && Model.Id > 0) ? "Edit" : "Create", "Document", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
+    
     @*@Html.AntiForgeryToken()*@
-    // поля формы  
+    // поля формы
     //Заголовок
     <div class="col-sm-6">
         <label asp-for="Title" class="control-label"></label>
@@ -23,7 +21,7 @@
         </select>
         <span asp-validation-for="CategoryId" class="text-danger"></span>
     </div>
-    //Отдел    
+    //Отдел
     <div class="col-sm-4">
         <label asp-for="Department" class="control-label"></label>
         <select asp-for="DepartmentId" class="form-control"
@@ -31,11 +29,11 @@
             <option value="">Выберите отдел</option>
         </select>
         <span asp-validation-for="DepartmentId" class="text-danger"></span>
-     </div>
-     //Закон
+    </div>
+    //Закон
     <div class="col-sm-4">
         <label asp-for="Laws" class="control-label"></label>
-        <select asp-for="Laws" class="form-control" 
+        <select asp-for="Laws" class="form-control"
             asp-items="@(new SelectList(ViewBag.Laws, "Id", "Title"))" multiple></select>
         <span asp-validation-for="Laws" class="text-danger"></span>
     </div>
@@ -58,12 +56,11 @@
     </div>
     // таблица с приложенными файлами
     <div class="file" id="documents_{{documents.id}}_{{f.id}}">
-        Приложения2:
-        @if (document != null && document.Files != null && document.Files.Any())
+
+        @if (Model != null && Model.Files != null && Model.Files.Any())
         {
             <p>Приложения2:</p>
-            <div class="file" id="file_@document.Id">
-                @document.Title
+            <div class="file" id="file_@Model.Id">
             </div>
             <table>
                 <thead>
@@ -73,7 +70,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var file in document.Files)
+                    @foreach (var file in Model.Files)
                     {
                         <tr>
                             <td>@file.Title</td>
@@ -87,24 +84,25 @@
             </table>
         }
 
-        <b>Приложения3: </b>
+       @* 
         <div class="file" id="documents_{{documents.id}}_{{f.id}}">
-            @if (document != null && document.Files != null)
+            @if (Model != null && Model.Files != null)
             {
-                @foreach (var file in document.Files)
+                <b>Приложения3: </b>
+                @foreach (var file in Model.Files)
                 {
                     <div class="file" id="file_@file.Id">
                         @file.Title
                     </div>
                 }
             }
-        </div>
+        </div>*@
     </div>
     <div class="form-group">
-    <div class="col-sm-4">
-        <button class="btn btn-info" type="submit">@((document != null && document.Id > 0) ? "Сохранить изменения" : "Создатьx")</button>
+        <div class="col-sm-4">
+            <button class="btn btn-info" type="submit">@((Model != null && Model.Id > 0) ? "Сохранить изменения" : "Создатьx")</button>
+        </div>
     </div>
-    </div>
-    
+
 
 }

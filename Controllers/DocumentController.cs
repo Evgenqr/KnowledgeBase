@@ -7,6 +7,8 @@ using KnowledgeBase.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Reflection.Metadata;
+using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace KnowledgeBase.Controllers
 {
@@ -16,7 +18,7 @@ namespace KnowledgeBase.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
 
-        
+
 
         public DocumentController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
@@ -129,7 +131,7 @@ namespace KnowledgeBase.Controllers
                 // Сохраняем документ в базе данных
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", new { id = document.Id });
-               // return RedirectToAction(nameof(Index));
+                // return RedirectToAction(nameof(Index));
             }
             catch (DbUpdateException /* ex */)
             {
@@ -137,10 +139,10 @@ namespace KnowledgeBase.Controllers
                 ModelState.AddModelError("", "Unable to save changes. " +
                     "Try again, and if the problem persists, " +
                     "see your system administrator.");
-              // return RedirectToAction("Index", "Home");
+                // return RedirectToAction("Index", "Home");
             }
-            
-           return View(document);
+
+            return View(document);
 
         }
 
@@ -152,7 +154,7 @@ namespace KnowledgeBase.Controllers
                 return NotFound();
             }
             var document = await _context.Documents.FindAsync(id);
-            var DateCreate = document.DateCreate;
+            
             if (document == null)
             {
                 return NotFound();
@@ -161,18 +163,18 @@ namespace KnowledgeBase.Controllers
             ViewBag.Department = _context.Departments.ToList();
             ViewBag.Laws = _context.Laws.ToList();
             ViewBag.Files = _context.Files.ToList();
+            
             //ViewBag.Files = document.Files;
             return View(document);
         }
 
         // POST: Documents/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Title,CategoryId,Laws,DepartmentId,Text, DateCreate, DateUpdate")] Models.Document document, int[] Laws)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Title,CategoryId,Laws,DepartmentId,Text, DateUpdate")] Models.Document document, int[] Laws, List<IFormFile> files)
         {
-            var DateCreate = document.DateCreate;
+           
+           
             if (id != document.Id)
             {
                 return NotFound();
@@ -182,7 +184,10 @@ namespace KnowledgeBase.Controllers
             {
                 try
                 {
-                    document.DateCreate = DateCreate;
+                    var originalDocument = await _context.Documents.AsNoTracking().FirstOrDefaultAsync(d => d.Id == id);
+                    document.DateCreate = originalDocument.DateCreate;
+                    //Debug.WriteLine("++++++++++++++++++", dateCreate);
+                    Debug.WriteLine("=========--------", document.DateCreate);
                     document.DateUpdate = DateTime.UtcNow;
                     // Обновление поля Laws модели Document
                     var selectedLaws = HttpContext.Request.Form["selectedLaws"].ToString().Split(',');
@@ -199,7 +204,8 @@ namespace KnowledgeBase.Controllers
                             }
                         }
                     }
-                    _context.Update(document);
+                   // _context.Update(document);
+                    _context.Entry(document).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     return RedirectToAction("Details", new { id = document.Id });
                 }
@@ -214,12 +220,12 @@ namespace KnowledgeBase.Controllers
                         throw;
                     }
                 }
-               // return RedirectToAction(nameof(Index));
+                // return RedirectToAction(nameof(Index));
             }
             ViewBag.Files = document.Files;
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", document.CategoryId);
             ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Id", document.DepartmentId);
-         
+
             return View(document);
         }
 
@@ -245,11 +251,11 @@ namespace KnowledgeBase.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-              if (_context.Documents == null)
+            if (_context.Documents == null)
             {
                 return Problem("Документ отсутствует.");
             }
-           // var document = await _context.Documents.FindAsync(id);
+            // var document = await _context.Documents.FindAsync(id);
             var document = await _context.Documents
             .Include(d => d.Files)
             .FirstOrDefaultAsync(d => d.Id == id);
@@ -264,7 +270,7 @@ namespace KnowledgeBase.Controllers
                     var path = Path.Combine(Directory.GetCurrentDirectory(), wwwrootpath + "/files/" + subDirPath);
                     if (Directory.Exists(path))
                     {
-                       Directory.Delete(path, true);
+                        Directory.Delete(path, true);
                     }
                 }
                 _context.Documents.Remove(document);

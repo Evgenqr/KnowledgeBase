@@ -41,12 +41,12 @@
 <div class="col-sm-9">
     @document.Text
 </div>
-@if (document.Files.Count > 0)
+@if (document.Files != null)
 {
     <b>Приложения: </b>
     <div class="file" id="documents_{{documents.id}}_{{f.id}}">
         <p class="filelogo" id="filelogo1">
-            @foreach (var file in document.Files)
+             @foreach (var file in document.Files)
             {
                 <div class="file" id="file_@file.Id">
                     <a class="text-decoration-none del-file" download href="/files/@document.Id/@file.Title@file.Extension", new { fileId=file.Id })" style="font-weight: bold;">
@@ -57,11 +57,12 @@
         </p>
     </div>
 }
-Создан: @document.DateCreate.ToShortDateString()
+Дата создания: @document.DateCreate.ToShortDateString()
 <br>
-@if (document.DateUpdate != null)
+@if (document.DateUpdate.HasValue)
 {
-    <span> Обновлён: @document.DateUpdate</span>
-
+    <p>
+        Дата обновления: @document.DateUpdate.Value.ToShortDateString()
+    </p>
 }
   @*  Автор: *@
