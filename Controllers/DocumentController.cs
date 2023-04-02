@@ -189,23 +189,18 @@ namespace KnowledgeBase.Controllers
                     document.DateUpdate = DateTime.UtcNow;
 
                     // Обновление поля Laws модели Document
-                    List<Law> existingLaws = await _context.Documents
-                        .Include(d => d.Laws)
-                        .Where(d => d.DocumentId == document.Id)
-                        .Select(d => d.Law)
-                        .ToListAsync();
-                        if (Laws != null)
+                    if (Laws != null)
+                    {
+                        document.Laws = new List<Law>();
+                        foreach (var lawId in Laws)
                         {
-                            document.Laws = new List<Law>();
-                            foreach (var lawId in Laws)
+                            var law = await _context.Laws.FirstOrDefaultAsync(l => l.Id == lawId);
+                            if (law != null)
                             {
-                                var law = await _context.Laws.FirstOrDefaultAsync(l => l.Id == lawId);
-                                if (law != null)
-                                {
-                                    document.Laws.Add(law);
-                                }
+                                document.Laws.Add(law);
                             }
                         }
+                    }
                     // _context.Update(document);
                     _context.Entry(document).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
