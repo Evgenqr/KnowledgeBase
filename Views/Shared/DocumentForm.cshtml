@@ -1,5 +1,7 @@
 ﻿@model Document
-
+@{
+    var document = (KnowledgeBase.Models.Document)ViewBag.Document;
+}
 <hr>
 @using (Html.BeginForm((Model != null && Model.Id > 0) ? "Edit" : "Create", "Document", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
@@ -34,7 +36,7 @@
     <div class="col-sm-4">
         <label asp-for="Laws" class="control-label"></label>
         <select asp-for="Laws" class="form-control"
-            asp-items="@(new SelectList(ViewBag.Laws, "Id", "Title"))" multiple></select>
+            asp-items="@(new MultiSelectList(ViewBag.Laws, "Id", "shorttitle"))" class="form-select" , multiple></select>
         <span asp-validation-for="Laws" class="text-danger"></span>
     </div>
     //Текст
@@ -100,7 +102,7 @@
     </div>
     <div class="form-group">
         <div class="col-sm-4">
-            <button class="btn btn-info" type="submit">@((Model != null && Model.Id > 0) ? "Сохранить изменения" : "Создатьx")</button>
+            <button class="btn btn-info" type="submit">@((Model != null && Model.Id > 0) ? "Сохранить изменения" : "Создать")</button>
         </div>
     </div>
 

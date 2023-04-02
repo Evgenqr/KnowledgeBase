@@ -186,25 +186,27 @@ namespace KnowledgeBase.Controllers
                 {
                     var originalDocument = await _context.Documents.AsNoTracking().FirstOrDefaultAsync(d => d.Id == id);
                     document.DateCreate = originalDocument.DateCreate;
-                    //Debug.WriteLine("++++++++++++++++++", dateCreate);
-                    Debug.WriteLine("=========--------", document.DateCreate);
                     document.DateUpdate = DateTime.UtcNow;
+
                     // Обновление поля Laws модели Document
-                    var selectedLaws = HttpContext.Request.Form["selectedLaws"].ToString().Split(',');
-                    document.Laws = new List<Law>();
-                    foreach (var selectedLaw in selectedLaws)
-                    {
-                        if (!string.IsNullOrEmpty(selectedLaw))
+                    List<Law> existingLaws = await _context.Documents
+                        .Include(d => d.Laws)
+                        .Where(d => d.DocumentId == document.Id)
+                        .Select(d => d.Law)
+                        .ToListAsync();
+                        if (Laws != null)
                         {
-                            var lawId = Convert.ToInt32(selectedLaw);
-                            var law = await _context.Laws.FirstOrDefaultAsync(l => l.Id == lawId);
-                            if (law != null)
+                            document.Laws = new List<Law>();
+                            foreach (var lawId in Laws)
                             {
-                                document.Laws.Add(law);
+                                var law = await _context.Laws.FirstOrDefaultAsync(l => l.Id == lawId);
+                                if (law != null)
+                                {
+                                    document.Laws.Add(law);
+                                }
                             }
                         }
-                    }
-                   // _context.Update(document);
+                    // _context.Update(document);
                     _context.Entry(document).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     return RedirectToAction("Details", new { id = document.Id });
