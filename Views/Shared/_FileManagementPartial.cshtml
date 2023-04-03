@@ -1,0 +1,26 @@
+﻿@model Document
+
+<div id="file-management">
+    <ul>
+        @foreach (var file in Model.Files)
+        {
+            <li>
+                <span> @file.Title</span>
+                <input type="checkbox" name="DeletedFiles" value="@file.Id" />
+            </li>
+        }
+    </ul>
+
+    <div class="form-group">
+        <label for="new-files">Добавить файлы</label>
+        <input type="file" id="new-files" name="newFiles" multiple>
+    </div>
+</div>
+
+@section Scripts {
+    <script type="text/javascript">
+        $('#file-management input[type="checkbox"]').change(function() {
+            $(this).closest('li').toggleClass('deleted', this.checked);
+        });
+    </script>
+}

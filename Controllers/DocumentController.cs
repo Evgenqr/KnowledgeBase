@@ -57,7 +57,7 @@ namespace KnowledgeBase.Controllers
             .Include(c => c.Category)
             .Include(o => o.Department)
             .Include(l => l.Laws)
-            .Include(d => d.Files)
+            .Include(f => f.Files)
             .FirstOrDefault();
             ViewBag.Document = document;
             ViewBag.Files = document.Files;
@@ -173,13 +173,10 @@ namespace KnowledgeBase.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, [Bind("Id,Title,CategoryId,Laws,DepartmentId,Text, DateUpdate")] Models.Document document, int[] Laws, List<IFormFile> files)
         {
-           
-           
             if (id != document.Id)
             {
                 return NotFound();
             }
-
             if (ModelState.IsValid)
             {
                 try
@@ -201,7 +198,45 @@ namespace KnowledgeBase.Controllers
                             }
                         }
                     }
-                    // _context.Update(document);
+
+                    // Сохраняем изменения в общий список файлов в документе
+                    if (files != null && files.Count > 0)
+                    {
+                        var fileModels = new List<FileModel>();
+                        foreach (var file in files)
+                        {
+                            if (file.Length > 0)
+                            {
+                                var fileModel = new FileModel();
+                                fileModel.Title = Path.GetFileNameWithoutExtension(file.FileName);
+                                fileModel.Extension = Path.GetExtension(file.FileName);
+                                string wwwrootpath = _webHostEnvironment.WebRootPath;
+                                string subDirPath = $"{document.Id}";
+                                DirectoryInfo dirInfo = new DirectoryInfo(wwwrootpath + "/files/");
+                                if (!dirInfo.Exists)
+                                {
+                                    dirInfo.Create();
+                                }
+                                dirInfo.CreateSubdirectory(subDirPath);
+                                fileModel.Path = Path.Combine(Directory.GetCurrentDirectory(), wwwrootpath + "/files/" + subDirPath + "/", fileModel.Title + fileModel.Extension);
+                                fileModels.Add(fileModel);
+                                using (var fileStream = new FileStream(fileModel.Path, FileMode.Create))
+                                {
+                                    await file.CopyToAsync(fileStream);
+                                }
+                                // Добавляем файл в контекст базы данных
+                                _context.Files.Add(fileModel);
+                            }
+                        }
+                        // Связываем файлы с документом
+                        document.Files = fileModels;
+                    }
+                    else
+                    {
+                        document.Files = originalDocument.Files;
+                    }
+                    // Сохраняем изменения в базе данных
+                    _context.Update(document); 
                     _context.Entry(document).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     return RedirectToAction("Details", new { id = document.Id });
@@ -219,9 +254,10 @@ namespace KnowledgeBase.Controllers
                 }
                 // return RedirectToAction(nameof(Index));
             }
-            ViewBag.Files = document.Files;
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Id", document.CategoryId);
-            ViewData["DepartmentId"] = new SelectList(_context.Departments, "Id", "Id", document.DepartmentId);
+            ViewBag.Category = _context.Categories.ToList();
+            ViewBag.Department = _context.Departments.ToList();
+            ViewBag.Laws = _context.Laws.ToList();
+            ViewBag.Files = _context.Files.ToList();
 
             return View(document);
         }

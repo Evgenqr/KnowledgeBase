@@ -45,7 +45,6 @@
 {
     <b>Приложения: </b>
     <div class="file" id="documents_{{documents.id}}_{{f.id}}">
-        <p class="filelogo" id="filelogo1">
              @foreach (var file in document.Files)
             {
                 <div class="file" id="file_@file.Id">
@@ -54,8 +53,7 @@
                     </a>
                 </div>
             }
-        </p>
-    </div>
+     </div>
 }
 Дата создания: @document.DateCreate.ToShortDateString()
 <br>
