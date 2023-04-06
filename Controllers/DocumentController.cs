@@ -154,7 +154,7 @@ namespace KnowledgeBase.Controllers
                 return NotFound();
             }
             var document = await _context.Documents.FindAsync(id);
-            
+
             if (document == null)
             {
                 return NotFound();
@@ -163,7 +163,7 @@ namespace KnowledgeBase.Controllers
             ViewBag.Department = _context.Departments.ToList();
             ViewBag.Laws = _context.Laws.ToList();
             ViewBag.Files = _context.Files.ToList();
-            
+
             //ViewBag.Files = document.Files;
             return View(document);
         }
@@ -184,10 +184,15 @@ namespace KnowledgeBase.Controllers
                     var originalDocument = await _context.Documents.AsNoTracking().FirstOrDefaultAsync(d => d.Id == id);
                     document.DateCreate = originalDocument.DateCreate;
                     document.DateUpdate = DateTime.UtcNow;
-
+                   
                     // Обновление поля Laws модели Document
                     if (Laws != null)
                     {
+                        // Удаляем все законы документа из контекста данных
+                        _context.Attach(document);
+                        _context.Entry(document).Collection(d => d.Laws).Load();
+                        document.Laws.Clear();
+                        _context.SaveChanges();
                         document.Laws = new List<Law>();
                         foreach (var lawId in Laws)
                         {
@@ -236,7 +241,7 @@ namespace KnowledgeBase.Controllers
                         document.Files = originalDocument.Files;
                     }
                     // Сохраняем изменения в базе данных
-                    _context.Update(document); 
+                    _context.Update(document);
                     _context.Entry(document).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
                     return RedirectToAction("Details", new { id = document.Id });
