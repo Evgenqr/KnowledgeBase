@@ -181,29 +181,65 @@ namespace KnowledgeBase.Controllers
             {
                 try
                 {
-                    var originalDocument = await _context.Documents.AsNoTracking().FirstOrDefaultAsync(d => d.Id == id);
+                    var originalDocument = await _context.Documents
+                        .AsNoTracking()
+                        .Include(l => l.Laws)
+                        .FirstOrDefaultAsync(d => d.Id == id);
                     document.DateCreate = originalDocument.DateCreate;
                     document.DateUpdate = DateTime.UtcNow;
-                   
+                    //document.Laws = originalDocument.Laws.ToList();
+                    if (originalDocument.Laws != null)
+                    {
+                        foreach (var lw in originalDocument.Laws)
+                        {
+                            Debug.WriteLine("aaaaaaaaaaaaaa " + lw.shorttitle);
+                        }
+                    }
+                    else
+                    {
+                        Debug.WriteLine("nnnnnnnnnnnnnnnnnnn  ");
+                    }
                     // Обновление поля Laws модели Document
                     if (Laws != null)
                     {
                         // Удаляем все законы документа из контекста данных
                         _context.Attach(document);
                         _context.Entry(document).Collection(d => d.Laws).Load();
+                        //originalDocument.Laws = document.Laws;
                         document.Laws.Clear();
                         _context.SaveChanges();
+                        
                         document.Laws = new List<Law>();
                         foreach (var lawId in Laws)
                         {
+                            Debug.WriteLine("============" + lawId);
                             var law = await _context.Laws.FirstOrDefaultAsync(l => l.Id == lawId);
                             if (law != null)
                             {
+                                Debug.WriteLine("+++++++++++++" + law.Title);
                                 document.Laws.Add(law);
                             }
+                            //else
+                            //{
+                            //    Debug.WriteLine("nooooooooooooooooooo11 Laws" );
+                            //    document.Laws = originalDocument.Laws;
+                            //}
+                        }
+                        if (document.Laws.Count() == 0 && originalDocument.Laws != null)
+                        {
+                            Debug.WriteLine("nooooooooooooooooooo222 Laws ");
+                            //foreach (var law in originalDocument.Laws)
+                            //{
+                            //    document.Laws.Add(law);
+                            //}
+                           // document.Laws = originalDocument.Laws.ToList();
+                        }
+                        else
+                        {
+                            Debug.WriteLine("!!!!!!!!!!!!! ");
                         }
                     }
-
+                   // _context.UpdateRange(document.Laws); // обновляем законы
                     // Сохраняем изменения в общий список файлов в документе
                     if (files != null && files.Count > 0)
                     {
@@ -241,6 +277,7 @@ namespace KnowledgeBase.Controllers
                         document.Files = originalDocument.Files;
                     }
                     // Сохраняем изменения в базе данных
+                    
                     _context.Update(document);
                     _context.Entry(document).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
