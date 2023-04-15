@@ -171,8 +171,9 @@ namespace KnowledgeBase.Controllers
         // POST: Documents/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Id,Title,CategoryId,Laws,DepartmentId,Text, DateUpdate")] Models.Document document, int[] Laws, List<IFormFile> files, int[] arr_of_id)
+        public async Task<IActionResult> Edit(long id, [Bind("Id,Title,CategoryId,Laws,DepartmentId,Text, DateUpdate")] Models.Document document, int[] Laws, List<IFormFile> files, string arr_of_id)
         {
+           
             if (id != document.Id)
             {
                 return NotFound();
@@ -184,6 +185,7 @@ namespace KnowledgeBase.Controllers
                     var originalDocument = await _context.Documents
                         .AsNoTracking()
                         .Include(l => l.Laws)
+                        .Include(f => f.Files)
                         .FirstOrDefaultAsync(d => d.Id == id);
                     document.DateCreate = originalDocument.DateCreate;
                     document.DateUpdate = DateTime.UtcNow;
@@ -216,9 +218,37 @@ namespace KnowledgeBase.Controllers
                             }
                          }
                     }
+                    // Удаление файлов
+                    var filesInDocument = originalDocument.Files;
+                    if (arr_of_id != null && filesInDocument != null)
+                    {
+                        string[] arrOfIdFile;
+                        if (arr_of_id.Length > 1) {
+                            arrOfIdFile = arr_of_id.Split(',');
+                        }
+                        else
+                        {
+                            var addel = arr_of_id[0];
+                            arrOfIdFile = new string[] { arr_of_id[0].ToString() };
+                        }
+                        foreach (var f in filesInDocument)
+                        {
+                            var fileId = Array.IndexOf(arrOfIdFile, (f.Id).ToString());
+                            if (fileId >= 0)
+                             {
+                                _context.Files.Remove(f);
+                                if (System.IO.File.Exists(f.Path))
+                                {
+                                    System.IO.File.Delete(f.Path);
+                                }
+                                _context.Update(document);
+                            }
+                        }
+                    }
                     // Сохраняем изменения в общий список файлов в документе
                     if (files != null && files.Count > 0)
                     {
+                        // Добавление новых файлов
                         var fileModels = new List<FileModel>();
                         foreach (var file in files)
                         {
@@ -244,11 +274,6 @@ namespace KnowledgeBase.Controllers
                                 // Добавляем файл в контекст базы данных
                                 _context.Files.Add(fileModel);
                             }
-
-
-
-
-
                         }
                         // Связываем файлы с документом
                         document.Files = fileModels;
@@ -257,10 +282,12 @@ namespace KnowledgeBase.Controllers
                     {
                         document.Files = originalDocument.Files;
                     }
+                    
                     // Сохраняем изменения в базе данных
                     _context.Update(document);
                     _context.Entry(document).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
+            
                     return RedirectToAction("Details", new { id = document.Id });
                 }
                 catch (DbUpdateConcurrencyException)

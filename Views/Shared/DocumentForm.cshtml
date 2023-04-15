@@ -56,7 +56,7 @@
         <br>Разрешённые типы файлов:
         <strong>txt doc docx xls xlsx pdf png jpg bmp rar zip ppt pptx rtf gif</strong>.
     </div>
-    <div class="file" id="documents_{{documents.id}}_{{f.id}}">
+    <div class="file">
         @if (Model != null && Model.Files != null && Model.Files.Any())
         {
             <p>Приложения:</p>
@@ -75,6 +75,7 @@
                             <td>
                                 @Html.CheckBox("deleteFile" + file.Id)
                                 @Html.Hidden("fileId", file.Id)
+                                <input type="hidden" name="arr_of_id" id="arr_of_id">
                                 <button class="btn btn-link  text-decoration-none del-file" data-bk="@file.DocumentId" data-pg="@file.Id" style="color: #6b2525;">Удалить</button>
                                 <hr>
                             </td>
@@ -89,5 +90,5 @@
             <button class="btn btn-info" type="submit">@((Model != null && Model.Id > 0) ? "Сохранить изменения" : "Создать")</button>
         </div>
     </div>
-    @await Html.PartialAsync("Scripts")
+    
 }
