@@ -18,16 +18,16 @@
 <a class="text-decoration-none" href="/category/{{documents.category.slug}}/">
     @document.Category.Title
 </a>
-<br> 
 @if (document.Department != null){
+<br />
 <b>Отдел:</b>
 <a class="text-decoration-none" href="/departament/{{documents.departament.slug}}/">
     @document.Department.Title
 </a>
 }
-<br/>
 @if (document.Laws.Count > 0)
 {
+    <br />
     <span>
         <b> Закон: </b>
            @foreach (var l in document.Laws)
@@ -51,6 +51,7 @@
                     <a class="text-decoration-none del-file" download href="/files/@document.Id/@file.Title@file.Extension", new { fileId=file.Id })" style="font-weight: bold;">
                         @file.Title
                     </a>
+               
                 </div>
             }
      </div>

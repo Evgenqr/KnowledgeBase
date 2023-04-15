@@ -3,7 +3,7 @@
     var document = (KnowledgeBase.Models.Document)ViewBag.Document;
 }
 <hr>
-@using (Html.BeginForm((Model != null && Model.Id > 0) ? "Edit" : "Create", "Document", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm((Model != null && Model.Id > 0) ? "Edit": "Create", "Document", FormMethod.Post, new { enctype = "multipart/form-data", id = "document-form" }))
 {
     
     @*@Html.AntiForgeryToken()*@
@@ -56,14 +56,10 @@
         <br>Разрешённые типы файлов:
         <strong>txt doc docx xls xlsx pdf png jpg bmp rar zip ppt pptx rtf gif</strong>.
     </div>
-    // таблица с приложенными файлами
     <div class="file" id="documents_{{documents.id}}_{{f.id}}">
-
         @if (Model != null && Model.Files != null && Model.Files.Any())
         {
-            <p>Приложения2:</p>
-            <div class="file" id="file_@Model.Id">
-            </div>
+            <p>Приложения:</p>
             <table>
                 <thead>
                     <tr>
@@ -74,37 +70,24 @@
                 <tbody>
                     @foreach (var file in Model.Files)
                     {
-                        <tr>
-                            <td>@file.Title</td>
+                        <tr class="file" id="document-@file.DocumentId-@file.Id">
+                            <td>@file.Title <hr></td>
                             <td>
                                 @Html.CheckBox("deleteFile" + file.Id)
                                 @Html.Hidden("fileId", file.Id)
+                                <button class="btn btn-link  text-decoration-none del-file" data-bk="@file.DocumentId" data-pg="@file.Id" style="color: #6b2525;">Удалить</button>
+                                <hr>
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
         }
-
-       @* 
-        <div class="file" id="documents_{{documents.id}}_{{f.id}}">
-            @if (Model != null && Model.Files != null)
-            {
-                <b>Приложения3: </b>
-                @foreach (var file in Model.Files)
-                {
-                    <div class="file" id="file_@file.Id">
-                        @file.Title
-                    </div>
-                }
-            }
-        </div>*@
     </div>
     <div class="form-group">
         <div class="col-sm-4">
             <button class="btn btn-info" type="submit">@((Model != null && Model.Id > 0) ? "Сохранить изменения" : "Создать")</button>
         </div>
     </div>
-
-
+    @await Html.PartialAsync("Scripts")
 }
