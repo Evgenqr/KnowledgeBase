@@ -64,6 +64,39 @@ namespace KnowledgeBase.Controllers
             return View();
         }
 
+        private async Task<List<FileModel>> CreateFilesForDocumentAsync(Models.Document document, List<IFormFile> files)
+        {
+            var fileModels = new List<FileModel>();
+            if (files != null)
+            {
+                foreach (var file in files)
+                {
+                    if (file.Length > 0)
+                    {
+                        var fileModel = new FileModel
+                        {
+                            Title = Path.GetFileNameWithoutExtension(file.FileName),
+                            Extension = Path.GetExtension(file.FileName)
+                        };
+                        string wwwrootpath = _webHostEnvironment.WebRootPath;
+                        string subDirPath = $"{document.Id}";
+                        DirectoryInfo dirInfo = new(wwwrootpath + "/files/");
+                        if (!dirInfo.Exists)
+                        {
+                            dirInfo.Create();
+                        }
+                        dirInfo.CreateSubdirectory(subDirPath);
+                        fileModel.Path = Path.Combine(Directory.GetCurrentDirectory(), wwwrootpath + "/files/" + subDirPath + "/", fileModel.Title + fileModel.Extension);
+                        fileModels.Add(fileModel);
+                        using var fileStream = new FileStream(fileModel.Path, FileMode.Create);
+                        await file.CopyToAsync(fileStream);
+                    }
+                }
+            }
+            return fileModels;
+        }
+
+
         // GET: Create
         public IActionResult Create()
         {
@@ -83,7 +116,7 @@ namespace KnowledgeBase.Controllers
                 if (ModelState.IsValid)
                 {
                     document.DateCreate = DateTime.UtcNow;
-                    List<Law> selectedLaws = new List<Law>();
+                    List<Law> selectedLaws = new();
                     if (Laws != null)
                     {
                         foreach (int lawId in Laws)
@@ -99,35 +132,8 @@ namespace KnowledgeBase.Controllers
                 }
                 _context.Add(document);
                 await _context.SaveChangesAsync();
-                if (files != null)
-                {
-                    var fileModels = new List<FileModel>();
-                    foreach (var file in files)
-                    {
-                        if (file.Length > 0)
-                        {
-                            var fileModel = new FileModel();
-                            fileModel.Title = Path.GetFileNameWithoutExtension(file.FileName);
-                            fileModel.Extension = Path.GetExtension(file.FileName);
-                            string wwwrootpath = _webHostEnvironment.WebRootPath;
-                            string subDirPath = $"{document.Id}";
-                            DirectoryInfo dirInfo = new DirectoryInfo(wwwrootpath + "/files/");
-                            if (!dirInfo.Exists)
-                            {
-                                dirInfo.Create();
-                            }
-                            dirInfo.CreateSubdirectory(subDirPath);
-                            fileModel.Path = Path.Combine(Directory.GetCurrentDirectory(), wwwrootpath + "/files/" + subDirPath + "/", fileModel.Title + fileModel.Extension);
-                            fileModels.Add(fileModel);
-                            using (var fileStream = new FileStream(fileModel.Path, FileMode.Create))
-                            {
-                                await file.CopyToAsync(fileStream);
-                            }
-                        }
-                    }
-                    // Связываем файлы с документом
-                    document.Files = fileModels;
-                }
+                // Создаем файлы для документа
+                document.Files = await CreateFilesForDocumentAsync(document, files);
                 // Сохраняем документ в базе данных
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", new { id = document.Id });
@@ -206,7 +212,7 @@ namespace KnowledgeBase.Controllers
                                 document.Laws.Add(law);
                             }
                         }
-                        if (document.Laws.Count() == 0 && originalDocument.Laws != null)
+                        if (document.Laws.Count == 0 && originalDocument.Laws != null)
                         {
                             foreach (var originallaw in originalDocument.Laws)
                             {
@@ -246,43 +252,11 @@ namespace KnowledgeBase.Controllers
                         }
                     }
                     // Сохраняем изменения в общий список файлов в документе
-                    if (files != null && files.Count > 0)
-                    {
-                        // Добавление новых файлов
-                        var fileModels = new List<FileModel>();
-                        foreach (var file in files)
-                        {
-                            if (file.Length > 0)
-                            {
-                                var fileModel = new FileModel();
-                                fileModel.Title = Path.GetFileNameWithoutExtension(file.FileName);
-                                fileModel.Extension = Path.GetExtension(file.FileName);
-                                string wwwrootpath = _webHostEnvironment.WebRootPath;
-                                string subDirPath = $"{document.Id}";
-                                DirectoryInfo dirInfo = new DirectoryInfo(wwwrootpath + "/files/");
-                                if (!dirInfo.Exists)
-                                {
-                                    dirInfo.Create();
-                                }
-                                dirInfo.CreateSubdirectory(subDirPath);
-                                fileModel.Path = Path.Combine(Directory.GetCurrentDirectory(), wwwrootpath + "/files/" + subDirPath + "/", fileModel.Title + fileModel.Extension);
-                                fileModels.Add(fileModel);
-                                using (var fileStream = new FileStream(fileModel.Path, FileMode.Create))
-                                {
-                                    await file.CopyToAsync(fileStream);
-                                }
-                                // Добавляем файл в контекст базы данных
-                                _context.Files.Add(fileModel);
-                            }
-                        }
-                        // Связываем файлы с документом
-                        document.Files = fileModels;
-                    }
-                    else
+                    document.Files = await CreateFilesForDocumentAsync(document, files);
+                    if (files == null) 
                     {
                         document.Files = originalDocument.Files;
                     }
-                    
                     // Сохраняем изменения в базе данных
                     _context.Update(document);
                     _context.Entry(document).State = EntityState.Modified;
