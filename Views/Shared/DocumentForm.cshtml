@@ -68,14 +68,13 @@
                     </tr>
                 </thead>
                 <tbody>
+                    
                     @foreach (var file in Model.Files)
                     {
                         <tr class="file" id="document-@file.DocumentId-@file.Id">
                             <td>@file.Title <hr></td>
                             <td>
-                                @Html.CheckBox("deleteFile" + file.Id)
-                                @Html.Hidden("fileId", file.Id)
-                                <input type="hidden" name="arr_of_id" id="arr_of_id">
+                                
                                 <button class="btn btn-link  text-decoration-none del-file" data-bk="@file.DocumentId" data-pg="@file.Id" style="color: #6b2525;">Удалить</button>
                                 <hr>
                             </td>
@@ -83,6 +82,7 @@
                     }
                 </tbody>
             </table>
+            <input type="hidden" name="arr_of_id" id="arr_of_id">
         }
     </div>
     <div class="form-group">

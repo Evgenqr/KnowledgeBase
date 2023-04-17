@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Reflection.Metadata;
 using System.Diagnostics;
 using System.Xml.Linq;
+using NuGet.Packaging.Signing;
 
 namespace KnowledgeBase.Controllers
 {
@@ -226,17 +227,39 @@ namespace KnowledgeBase.Controllers
                     }
                     // Удаление файлов
                     var filesInDocument = originalDocument.Files;
-                    if (arr_of_id != null && filesInDocument != null)
+                    if (arr_of_id != null)
                     {
                         string[] arrOfIdFile;
-                        if (arr_of_id.Length > 1) {
-                            arrOfIdFile = arr_of_id.Split(',');
-                        }
-                        else
+                        arrOfIdFile = arr_of_id.Split(',');
+                        Debug.WriteLine("================== " + arrOfIdFile.Length);
+                        foreach (var ids in arrOfIdFile)
                         {
-                            var addel = arr_of_id[0];
-                            arrOfIdFile = new string[] { arr_of_id[0].ToString() };
+                            Debug.WriteLine("+++++++++++++++++++++ " + ids);
                         }
+                        //if (arr_of_id.Count() > 1) {
+                        //    arrOfIdFile = arr_of_id.Split(',');
+                        //    Debug.WriteLine("+++++++++++++++++++++--0 " + arr_of_id.Count());
+                        //    foreach (var ids in arrOfIdFile)
+                        //    {
+                        //        Debug.WriteLine("+++++++++++++++++++++ " + ids);
+                        //    }
+                            
+                        //}
+                        //if (arr_of_id.Count() == 1)
+                        //{
+                        //    arrOfIdFile = new string[] { arr_of_id[0].ToString() };
+                        //    Debug.WriteLine("!!!!!!!!!!!!!!-00 " + arrOfIdFile.Length);
+                        //    foreach (var ids in arrOfIdFile)
+                        //    {
+                        //        Debug.WriteLine("!!!!!!!!!!!!!!!!!!!! " + ids);
+                        //    }
+
+                        //}
+                        //else
+                        //{
+                        //    var addel = arr_of_id[0];
+                        //    arrOfIdFile = new string[] { arr_of_id[0].ToString() };
+                        //}
                         foreach (var f in filesInDocument)
                         {
                             var fileId = Array.IndexOf(arrOfIdFile, (f.Id).ToString());
@@ -247,9 +270,16 @@ namespace KnowledgeBase.Controllers
                                 {
                                     System.IO.File.Delete(f.Path);
                                 }
-                                _context.Update(document);
+                               
                             }
+                            _context.Update(document);
                         }
+                    }
+                    else
+                    {
+                       Debug.WriteLine("vvvvvvvvvvvvvvvv ccccccccccccccccc" );
+                       //Debug.WriteLine("bbbbbbbbbbbbbbbbb " + arr_of_id.Count());
+                       //Debug.WriteLine("ddddddddddddddddd " + arr_of_id.ToList().ToString());
                     }
                     // Сохраняем изменения в общий список файлов в документе
                     document.Files = await CreateFilesForDocumentAsync(document, files);
