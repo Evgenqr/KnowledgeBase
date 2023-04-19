@@ -10,6 +10,8 @@ using System.Reflection.Metadata;
 using System.Diagnostics;
 using System.Xml.Linq;
 using NuGet.Packaging.Signing;
+using static System.Net.Mime.MediaTypeNames;
+using System.Net.NetworkInformation;
 
 namespace KnowledgeBase.Controllers
 {
@@ -68,6 +70,8 @@ namespace KnowledgeBase.Controllers
         private async Task<List<FileModel>> CreateFilesForDocumentAsync(Models.Document document, List<IFormFile> files)
         {
             var fileModels = new List<FileModel>();
+            string[] whiteListExtension = { ".txt", ".doc", ".doc", ".docx", ".rtf", ".odt", ".xls", ".xlsx", ".pdf",
+                ".png", ".jpg", ".bmp", ".gif", ".ppt", ".pptx"};
             if (files != null)
             {
                 foreach (var file in files)
@@ -79,24 +83,27 @@ namespace KnowledgeBase.Controllers
                             Title = Path.GetFileNameWithoutExtension(file.FileName),
                             Extension = Path.GetExtension(file.FileName)
                         };
-                        string wwwrootpath = _webHostEnvironment.WebRootPath;
-                        string subDirPath = $"{document.Id}";
-                        DirectoryInfo dirInfo = new(wwwrootpath + "/files/");
-                        if (!dirInfo.Exists)
+                        var ExtInArr = Array.IndexOf(whiteListExtension, fileModel.Extension);
+                        if (ExtInArr >= 0)
                         {
-                            dirInfo.Create();
+                            string wwwrootpath = _webHostEnvironment.WebRootPath;
+                            string subDirPath = $"{document.Id}";
+                            DirectoryInfo dirInfo = new(wwwrootpath + "/files/");
+                            if (!dirInfo.Exists)
+                            {
+                                dirInfo.Create();
+                            }
+                            dirInfo.CreateSubdirectory(subDirPath);
+                            fileModel.Path = Path.Combine(Directory.GetCurrentDirectory(), wwwrootpath + "/files/" + subDirPath + "/", fileModel.Title + fileModel.Extension);
+                            fileModels.Add(fileModel);
+                            using var fileStream = new FileStream(fileModel.Path, FileMode.Create);
+                            await file.CopyToAsync(fileStream);
                         }
-                        dirInfo.CreateSubdirectory(subDirPath);
-                        fileModel.Path = Path.Combine(Directory.GetCurrentDirectory(), wwwrootpath + "/files/" + subDirPath + "/", fileModel.Title + fileModel.Extension);
-                        fileModels.Add(fileModel);
-                        using var fileStream = new FileStream(fileModel.Path, FileMode.Create);
-                        await file.CopyToAsync(fileStream);
                     }
                 }
             }
             return fileModels;
         }
-
 
         // GET: Create
         public IActionResult Create()
@@ -135,7 +142,7 @@ namespace KnowledgeBase.Controllers
                 await _context.SaveChangesAsync();
                 // Создаем файлы для документа
                 document.Files = await CreateFilesForDocumentAsync(document, files);
-                // Сохраняем документ в базе данных
+                 // Сохраняем документ в базе данных
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Details", new { id = document.Id });
                 // return RedirectToAction(nameof(Index));
@@ -231,34 +238,10 @@ namespace KnowledgeBase.Controllers
                     {
                         string[] arrOfIdFile;
                         arrOfIdFile = arr_of_id.Split(',');
-                        Debug.WriteLine("================== " + arrOfIdFile.Length);
-                        foreach (var ids in arrOfIdFile)
-                        {
-                            Debug.WriteLine("+++++++++++++++++++++ " + ids);
-                        }
-                        //if (arr_of_id.Count() > 1) {
-                        //    arrOfIdFile = arr_of_id.Split(',');
-                        //    Debug.WriteLine("+++++++++++++++++++++--0 " + arr_of_id.Count());
-                        //    foreach (var ids in arrOfIdFile)
-                        //    {
-                        //        Debug.WriteLine("+++++++++++++++++++++ " + ids);
-                        //    }
-                            
-                        //}
-                        //if (arr_of_id.Count() == 1)
+                       // Debug.WriteLine("================== " + arrOfIdFile.Length);
+                        //foreach (var ids in arrOfIdFile)
                         //{
-                        //    arrOfIdFile = new string[] { arr_of_id[0].ToString() };
-                        //    Debug.WriteLine("!!!!!!!!!!!!!!-00 " + arrOfIdFile.Length);
-                        //    foreach (var ids in arrOfIdFile)
-                        //    {
-                        //        Debug.WriteLine("!!!!!!!!!!!!!!!!!!!! " + ids);
-                        //    }
-
-                        //}
-                        //else
-                        //{
-                        //    var addel = arr_of_id[0];
-                        //    arrOfIdFile = new string[] { arr_of_id[0].ToString() };
+                        //    Debug.WriteLine("+++++++++++++++++++++ " + ids);
                         //}
                         foreach (var f in filesInDocument)
                         {
@@ -274,12 +257,6 @@ namespace KnowledgeBase.Controllers
                             }
                             _context.Update(document);
                         }
-                    }
-                    else
-                    {
-                       Debug.WriteLine("vvvvvvvvvvvvvvvv ccccccccccccccccc" );
-                       //Debug.WriteLine("bbbbbbbbbbbbbbbbb " + arr_of_id.Count());
-                       //Debug.WriteLine("ddddddddddddddddd " + arr_of_id.ToList().ToString());
                     }
                     // Сохраняем изменения в общий список файлов в документе
                     document.Files = await CreateFilesForDocumentAsync(document, files);
@@ -311,7 +288,6 @@ namespace KnowledgeBase.Controllers
             ViewBag.Department = _context.Departments.ToList();
             ViewBag.Laws = _context.Laws.ToList();
             ViewBag.Files = _context.Files.ToList();
-
             return View(document);
         }
 
