@@ -13,37 +13,52 @@
         Редактировать
     </a>
 </div>
-
 <b>Категория:</b>
 <a class="text-decoration-none" href="/category/{{documents.category.slug}}/">
     @document.Category.Title
 </a>
-@if (document.Department != null){
 <br />
 <b>Отдел:</b>
+@if (document.Department != null){
+
 <a class="text-decoration-none" href="/departament/{{documents.departament.slug}}/">
     @document.Department.Title
 </a>
 }
+else
+{
+    <span class="text-muted">Не указан</span>
+}
+<br />
+<b> Закон: </b>
 @if (document.Laws.Count > 0)
 {
-    <br />
-    <span>
-        <b> Закон: </b>
+     <span>
            @foreach (var l in document.Laws)
         {
-            <a class="text-decoration-none"  href="/laws/{{l.slug}}/">
-                @l.shorttitle
-            </a>
+            @if (l.Title == "NoFz" && document.Laws.Count == 1)
+            {
+                <span class="text-muted">Не указан</span>
+                document.Laws.Remove(l);
+            }
+            @if (l.Title != "NoFz" && document.Laws.Count > 1)
+            {
+                <a class="text-decoration-none" href="/laws/{{l.slug}}/">
+                    @l.shorttitle
+                </a>
+            }
         }
     </span>
+}
+else{
+    <span class="text-muted">Не указан</span>
 }
 <div class="col-sm-9">
     @document.Text
 </div>
 @if (document.Files != null)
 {
-    <b>Приложения: </b>
+   <b> Приложения: </b>
     <div class="file" id="documents_{{documents.id}}_{{f.id}}">
              @foreach (var file in document.Files)
             {
@@ -56,12 +71,15 @@
             }
      </div>
 }
-Дата создания: @document.DateCreate.ToShortDateString()
+<b>Дата создания:</b> @document.DateCreate.ToShortDateString()
 <br>
+<b> Дата обновления: </b>
 @if (document.DateUpdate.HasValue)
 {
-    <p>
-        Дата обновления: @document.DateUpdate.Value.ToShortDateString()
-    </p>
+    @document.DateUpdate.Value.ToShortDateString()
 }
-  @*  Автор: *@
+else
+{
+    <span class="text-muted">Не указана</span>
+}
+@*  Автор: *@
