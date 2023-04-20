@@ -129,6 +129,10 @@ namespace KnowledgeBase.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("RealTitle")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");

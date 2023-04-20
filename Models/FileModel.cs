@@ -11,10 +11,15 @@ namespace KnowledgeBase.Models
         /// </summary>
         public long Id { get; set; }
         /// <summary>
-        /// Название файла
+        /// Название файла при сохранении на сервер
         /// </summary>
         [Display(Name = "Название файла")]
         public string Title { get; set; }
+        /// <summary>
+        /// Название файла
+        /// </summary>
+        [Display(Name = "Название файла")]
+        public string RealTitle { get; set; }
         /// <summary>
         /// Расширение файла
         /// </summary>

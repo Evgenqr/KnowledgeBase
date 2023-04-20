@@ -17,11 +17,8 @@ namespace KnowledgeBase.Controllers
 {
     public class DocumentController : Controller
     {
-
         private readonly ApplicationDbContext _context;
         private readonly IWebHostEnvironment _webHostEnvironment;
-
-
 
         public DocumentController(ApplicationDbContext context, IWebHostEnvironment webHostEnvironment)
         {
@@ -66,21 +63,25 @@ namespace KnowledgeBase.Controllers
             ViewBag.Files = document.Files;
             return View();
         }
-
+        
         private async Task<List<FileModel>> CreateFilesForDocumentAsync(Models.Document document, List<IFormFile> files)
         {
             var fileModels = new List<FileModel>();
             string[] whiteListExtension = { ".txt", ".doc", ".doc", ".docx", ".rtf", ".odt", ".xls", ".xlsx", ".pdf",
                 ".png", ".jpg", ".bmp", ".gif", ".ppt", ".pptx"};
+            var maxFileSize = 20*1024*1024;
             if (files != null)
             {
                 foreach (var file in files)
                 {
-                    if (file.Length > 0)
+                    if (file.Length > 0 && file.Length <= maxFileSize)
                     {
+                        Debug.WriteLine("============= " + file.Length);
+
                         var fileModel = new FileModel
                         {
-                            Title = Path.GetFileNameWithoutExtension(file.FileName),
+                            Title = Path.GetRandomFileName(),
+                            RealTitle = Path.GetFileNameWithoutExtension(file.FileName),
                             Extension = Path.GetExtension(file.FileName)
                         };
                         var ExtInArr = Array.IndexOf(whiteListExtension, fileModel.Extension);
@@ -94,7 +95,7 @@ namespace KnowledgeBase.Controllers
                                 dirInfo.Create();
                             }
                             dirInfo.CreateSubdirectory(subDirPath);
-                            fileModel.Path = Path.Combine(Directory.GetCurrentDirectory(), wwwrootpath + "/files/" + subDirPath + "/", fileModel.Title + fileModel.Extension);
+                            fileModel.Path = Path.Combine(Directory.GetCurrentDirectory(), wwwrootpath + "/files/" + subDirPath + "/", fileModel.Title  + fileModel.Extension);
                             fileModels.Add(fileModel);
                             using var fileStream = new FileStream(fileModel.Path, FileMode.Create);
                             await file.CopyToAsync(fileStream);
@@ -153,11 +154,8 @@ namespace KnowledgeBase.Controllers
                 ModelState.AddModelError("", "Unable to save changes. " +
                     "Try again, and if the problem persists, " +
                     "see your system administrator.");
-                // return RedirectToAction("Index", "Home");
             }
-
             return View(document);
-
         }
 
         // GET: Documents/Edit/5
@@ -177,8 +175,6 @@ namespace KnowledgeBase.Controllers
             ViewBag.Department = _context.Departments.ToList();
             ViewBag.Laws = _context.Laws.ToList();
             ViewBag.Files = _context.Files.ToList();
-
-            //ViewBag.Files = document.Files;
             return View(document);
         }
 
@@ -187,7 +183,6 @@ namespace KnowledgeBase.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, [Bind("Id,Title,CategoryId,Laws,DepartmentId,Text, DateUpdate")] Models.Document document, int[] Laws, List<IFormFile> files, string arr_of_id)
         {
-           
             if (id != document.Id)
             {
                 return NotFound();
@@ -238,11 +233,6 @@ namespace KnowledgeBase.Controllers
                     {
                         string[] arrOfIdFile;
                         arrOfIdFile = arr_of_id.Split(',');
-                       // Debug.WriteLine("================== " + arrOfIdFile.Length);
-                        //foreach (var ids in arrOfIdFile)
-                        //{
-                        //    Debug.WriteLine("+++++++++++++++++++++ " + ids);
-                        //}
                         foreach (var f in filesInDocument)
                         {
                             var fileId = Array.IndexOf(arrOfIdFile, (f.Id).ToString());
@@ -253,7 +243,6 @@ namespace KnowledgeBase.Controllers
                                 {
                                     System.IO.File.Delete(f.Path);
                                 }
-                               
                             }
                             _context.Update(document);
                         }
@@ -268,7 +257,6 @@ namespace KnowledgeBase.Controllers
                     _context.Update(document);
                     _context.Entry(document).State = EntityState.Modified;
                     await _context.SaveChangesAsync();
-            
                     return RedirectToAction("Details", new { id = document.Id });
                 }
                 catch (DbUpdateConcurrencyException)
@@ -321,7 +309,6 @@ namespace KnowledgeBase.Controllers
             var document = await _context.Documents
             .Include(d => d.Files)
             .FirstOrDefaultAsync(d => d.Id == id);
-
             if (document != null)
             {
                 var files = await _context.Files.Where(f => f.DocumentId == id).ToListAsync();

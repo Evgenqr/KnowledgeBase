@@ -5,9 +5,7 @@
 <hr>
 @using (Html.BeginForm((Model != null && Model.Id > 0) ? "Edit": "Create", "Document", FormMethod.Post, new { enctype = "multipart/form-data", id = "document-form" }))
 {
-    
     @*@Html.AntiForgeryToken()*@
-    // поля формы
     //Заголовок
     <div class="col-sm-6">
         <label asp-for="Title" class="control-label"></label>
@@ -52,10 +50,10 @@
         <span asp-validation-for="Files" class="text-danger"></span>
     </div>
     <div class="description col-sm-12">
-        Максимальный размер файла: <strong>50 МБ</strong>.
+        Максимальный размер файла: <strong>20 МБ</strong>.
         <br>Разрешённые типы файлов:
         <strong>txt doc docx xls xlsx pdf png jpg bmp ppt pptx rtf gif</strong>.
-    </div>
+    
     <div class="file">
         @if (Model != null && Model.Files != null && Model.Files.Any())
         {
@@ -68,13 +66,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
                     @foreach (var file in Model.Files)
                     {
                         <tr class="file" id="document-@file.DocumentId-@file.Id">
-                            <td>@file.Title <hr></td>
+                            <td>@file.RealTitle <hr></td>
                             <td>
-                                
                                 <button class="btn btn-link  text-decoration-none del-file" data-bk="@file.DocumentId" data-pg="@file.Id" style="color: #6b2525;">Удалить</button>
                                 <hr>
                             </td>
@@ -85,10 +81,9 @@
             <input type="hidden" name="arr_of_id" id="arr_of_id">
         }
     </div>
-    <div class="form-group">
-        <div class="col-sm-4">
+    </div>
+    <div class="col-sm-6">
             <button class="btn btn-info" type="submit">@((Model != null && Model.Id > 0) ? "Сохранить изменения" : "Создать")</button>
-        </div>
     </div>
     
 }
