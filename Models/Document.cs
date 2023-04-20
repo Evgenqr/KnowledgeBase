@@ -20,6 +20,9 @@ namespace KnowledgeBase.Models
         /// </summary>
         //[Display(Name = "Пользователь")]
         //public User User { get; set; }
+        /// <summary>
+        /// Id категории
+        /// </summary>
         public int CategoryId { get; set; }
         /// <summary>
         /// Категория документа

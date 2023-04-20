@@ -1,15 +1,48 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using KnowledgeBase.Data;
+using KnowledgeBase.Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace KnowledgeBase.Controllers
 {
     public class CategoryController : Controller
     {
-
-        // GET: HomeController1
-        public ActionResult Index()
+        private readonly ApplicationDbContext _context;
+        public CategoryController(ApplicationDbContext context)
         {
-            return View();
+            _context = context;
+            
+        }
+        // GET: HomeController1
+        public ActionResult Index(int idCat, long? idDoc)
+        {
+            var documents = _context.Documents.ToList();
+            if (_context.Categories == null)
+            {
+                return NotFound();
+            }
+            var category = _context.Categories
+                .Where(c => c.Id == idCat)
+                .FirstOrDefault();
+            
+            var document = _context.Documents
+                .Where(d => d.Id == idDoc
+                && category.Id == idCat)
+                .Include(c => c.Category);
+            //.Include(c => c.Category)
+            //.Include(o => o.Department)
+            //.Include(l => l.Laws)
+            //.Include(f => f.Files)
+            //.FirstOrDefault();
+            // ViewBag.Category = category;
+            ViewBag.Category = _context.Categories.ToList();
+            ViewBag.Document = document;
+            //ViewBag.Files = document.Files;
+            return View(documents);
+
+
         }
 
         // GET: HomeController1/Details/5

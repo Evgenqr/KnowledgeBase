@@ -65,5 +65,10 @@ app.MapControllerRoute(
         pattern: "document/{id}/edit",
         defaults: new { controller = "Document", action = "Edit" });
 
+app.MapControllerRoute(
+        name: "CategoryIndex",
+        pattern: "category/{id}",
+        defaults: new { controller = "Category", action = "Index" });
+
 
 app.Run();
