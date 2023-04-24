@@ -14,14 +14,14 @@
     </a>
 </div>
 <b>Категория:</b>
-<a class="text-decoration-none" href="/category/{{documents.category.slug}}/">
+<a class="text-decoration-none" href="/category/@document.CategoryId/">
     @document.Category.Title
 </a>
 <br />
 <b>Отдел:</b>
 @if (document.Department != null){
 
-<a class="text-decoration-none" href="/departament/{{documents.departament.slug}}/">
+<a class="text-decoration-none" href="/departament/@document.DepartmentId/">
     @document.Department.Title
 </a>
 }
@@ -39,11 +39,11 @@ else
             @if (l.Title == "NoFz" && document.Laws.Count == 1)
             {
                 <span class="text-muted">Не указан</span>
-                document.Laws.Remove(l);
+                @document.Laws.Remove(l);
             }
             @if (l.Title != "NoFz" && document.Laws.Count > 1)
             {
-                <a class="text-decoration-none" href="/laws/{{l.slug}}/">
+                <a class="text-decoration-none" href="/laws/@l.Id/">
                     @l.shorttitle
                 </a>
             }
@@ -59,7 +59,8 @@ else{
 @if (document.Files != null)
 {
    <b> Приложения: </b>
-    <div class="file" id="documents_{{documents.id}}_{{f.id}}">
+    <div class="file">
+      @*  id="documents_@document.Id"*@
              @foreach (var file in document.Files)
             {
                 <div class="file" id="file_@file.Id">

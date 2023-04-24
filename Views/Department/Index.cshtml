@@ -1,12 +1,23 @@
 ﻿@model IEnumerable<Document>
 @{
-
-    ViewData["Title"] = "Главная страница";
+    var department = (KnowledgeBase.Models.Department)ViewBag.Departments;
+}
+@{
+    @if(department != null)
+    {
+        ViewData["Title"] = $"Отдел {ViewBag.Departments}";
+    }
 }
 
+<h4 style="text-align: center;">
+    @if (department != null)
+    {
+        @department.Title;
+    }
+</h4>
 <h1>База знаний Курского УФАС России</h1>
 <div class="grey-card">
-    @foreach (var document in Model)
+     @foreach (var document in Model)
     {
         <div class="row" style="padding-bottom: 1rem;">
             <div class="col-sm-10">
@@ -20,7 +31,7 @@
             <div class="row">
                 <div class="col-sm-9">
                     <a href="/category/@document.CategoryId" class="badge badge-disabled" style="margin: 2px 0; padding: 6px 10px;">
-                       @document.Category.Title
+                        @document.Category.Title
                     </a>
                 </div>
 
@@ -29,7 +40,4 @@
 
     }
 </div>
-
-
-
 
