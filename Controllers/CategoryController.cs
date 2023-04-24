@@ -16,30 +16,17 @@ namespace KnowledgeBase.Controllers
             
         }
         // GET: HomeController1
-        public ActionResult Index(int idCat, long? idDoc)
+        public ActionResult Index(int id)
         {
-            var documents = _context.Documents.ToList();
             if (_context.Categories == null)
             {
                 return NotFound();
             }
-            var category = _context.Categories
-                .Where(c => c.Id == idCat)
-                .FirstOrDefault();
-            
-            var document = _context.Documents
-                .Where(d => d.Id == idDoc
-                && category.Id == idCat)
-                .Include(c => c.Category);
-            //.Include(c => c.Category)
-            //.Include(o => o.Department)
-            //.Include(l => l.Laws)
-            //.Include(f => f.Files)
-            //.FirstOrDefault();
-            // ViewBag.Category = category;
+            var documents = _context.Documents
+                .Include(c => c.Category)
+                .Where(с => с.CategoryId == id);
             ViewBag.Category = _context.Categories.ToList();
-            ViewBag.Document = document;
-            //ViewBag.Files = document.Files;
+            ViewBag.Document = documents;
             return View(documents);
 
 
