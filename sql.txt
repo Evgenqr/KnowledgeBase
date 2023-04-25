@@ -1,0 +1,18 @@
+INSERT INTO public."Categories" ("Id", "Title") VALUES 
+('1'::bigint, 'Cat1'::character varying),
+('2'::bigint, 'Cat2'::character varying),
+('3'::bigint, 'Cat3'::character varying);
+
+
+
+INSERT INTO public."Departments" ("Id", "Title") VALUES 
+('1'::bigint, 'Dep1'::character varying),
+('2'::bigint, 'Dep2'::character varying),
+('3'::bigint, 'Dep3'::character varying),
+('4'::bigint, 'Dep4'::character varying);
+
+
+INSERT INTO public."Laws" ("Id", "Title", "shorttitle") VALUES 
+('1'::bigint, 'Law1'::character varying, 'Fz1' ::character varying),
+('2'::bigint, 'Law2'::character varying, 'Fz2' ::character varying),
+('3'::bigint, 'Law3'::character varying, 'Fz3' ::character varying);

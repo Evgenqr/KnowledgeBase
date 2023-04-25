@@ -68,8 +68,13 @@
                 <tbody>
                     @foreach (var file in Model.Files)
                     {
-                        <tr class="file" id="document-@file.DocumentId-@file.Id">
-                            <td>@file.RealTitle <hr></td>
+                         <tr class="file" id="document-@file.DocumentId-@file.Id">
+                            <td>
+                                    <p class="filelogo">
+                                @file.RealTitle@file.Extension
+                                    </p>
+                                    <hr>
+                                </td>
                             <td>
                                 <button class="btn btn-link  text-decoration-none del-file" data-bk="@file.DocumentId" data-pg="@file.Id" style="color: #6b2525;">Удалить</button>
                                 <hr>
@@ -80,6 +85,12 @@
             </table>
             <input type="hidden" name="arr_of_id" id="arr_of_id">
         }
+            @if (ViewData["Error"] != null)
+            {
+                <div class="alert alert-danger">
+                    <strong>Ошибка!</strong> @ViewData["Error"]
+                </div>
+            }
     </div>
     </div>
     <div class="col-sm-6">
@@ -87,3 +98,4 @@
     </div>
     
 }
+<script src="~/js/scripts.js"></script>

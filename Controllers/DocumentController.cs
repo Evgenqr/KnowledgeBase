@@ -63,7 +63,9 @@ namespace KnowledgeBase.Controllers
             ViewBag.Files = document.Files;
             return View();
         }
-        
+        /// <summary>
+        /// Метод загрузки файлов
+        /// </summary>
         private async Task<List<FileModel>> CreateFilesForDocumentAsync(Models.Document document, List<IFormFile> files)
         {
             var fileModels = new List<FileModel>();
@@ -72,7 +74,10 @@ namespace KnowledgeBase.Controllers
             var maxFileSize = 20*1024*1024;
             if (files != null)
             {
-                foreach (var file in files)
+                //var allowedFileTypes = new string[] { ".pdf", ".doc", ".docx" };
+                //if (!allowedFileTypes.Contains(Path.GetExtension(file.FileName).ToLowerInvariant()))
+
+                    foreach (var file in files)
                 {
                     if (file.Length > 0 && file.Length <= maxFileSize)
                     {
@@ -80,9 +85,9 @@ namespace KnowledgeBase.Controllers
                         {
                             Title = Path.GetRandomFileName(),
                             RealTitle = Path.GetFileNameWithoutExtension(file.FileName),
-                            Extension = Path.GetExtension(file.FileName)
+                            Extension = Path.GetExtension(file.FileName).ToLower()
                         };
-                        var ExtInArr = Array.IndexOf(whiteListExtension, fileModel.Extension);
+                        var ExtInArr = Array.IndexOf(whiteListExtension, fileModel.Extension.ToLowerInvariant());
                         if (ExtInArr >= 0)
                         {
                             string wwwrootpath = _webHostEnvironment.WebRootPath;
@@ -97,6 +102,12 @@ namespace KnowledgeBase.Controllers
                             fileModels.Add(fileModel);
                             using var fileStream = new FileStream(fileModel.Path, FileMode.Create);
                             await file.CopyToAsync(fileStream);
+                        }
+                        else
+                        {
+                            
+                            ViewData["Error"] = "Выбранный файл не может быть загружен. Возможно загрузка файлов только со следующими расширениями:";
+                            
                         }
                     }
                 }
@@ -247,6 +258,10 @@ namespace KnowledgeBase.Controllers
                     }
                     // Сохраняем изменения в общий список файлов в документе
                     document.Files = await CreateFilesForDocumentAsync(document, files);
+                    foreach (var df in document.Files)
+                    {
+                        Debug.WriteLine("+++++++++++++" + df.Extension);
+                    }
                     if (files == null) 
                     {
                         document.Files = originalDocument.Files;

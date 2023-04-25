@@ -64,9 +64,11 @@ else{
              @foreach (var file in document.Files)
             {
                 <div class="file" id="file_@file.Id">
-                 <a class="text-decoration-none del-file" download="@file.RealTitle" href="/files/@document.Id/@file.Title@file.Extension" , new { fileId=file.Id })" style="font-weight: bold;">
-                        @file.RealTitle
-                    </a>
+                    <p class="filelogo">
+                        <a class="text-decoration-none del-file" download="@file.RealTitle" href="/files/@document.Id/@file.Title@file.Extension" , new { fileId=file.Id })" style="font-weight: bold;">
+                        @file.RealTitle@file.Extension
+                        </a>
+                    </p>
                 </div>
             }
      </div>
@@ -83,3 +85,5 @@ else
     <span class="text-muted">Не указана</span>
 }
 @*  Автор: *@
+
+<script src="~/js/scripts.js"></script>

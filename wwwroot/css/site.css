@@ -21,6 +21,11 @@ body {
   margin-bottom: 60px;
 }
 
+.filelogo {
+    background-repeat: no-repeat;
+    background-size: contain;
+    padding-left: 30px;
+}
 
 /*------------------------------------------------------------*/
 .dropbtn {
