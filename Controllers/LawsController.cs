@@ -16,26 +16,23 @@ namespace KnowledgeBase.Controllers
             _context = context;
         }
         // GET: LawController1
-       // public async IActionResult Index(int? id)
-          public async Task<IActionResult> Index(int id)
+         public IActionResult Index(int id)
         {
-            if (id < 1 || _context.Documents == null)
+            var law = _context.Laws.Find(id);
+            if (id < 1 || _context.Documents == null || law == null)
             {
                 return NotFound();
             }
-
-            var law = await _context.Laws.FindAsync(id);
-            if (law == null)
-            {
-                return NotFound();
-            }
-            var documents = await _context.Documents
-                                   .Include(d => d.Laws)
-                                   .Where(d => d.Laws.Contains(law))
-                                   .ToListAsync();
+            var documents =  _context.Documents
+                                  .Include(d => d.Laws)
+                                  .Where(d => d.Laws.Contains(law))
+                                  .OrderByDescending(d => d.DateCreate)
+                                  .ThenBy(d => d.Id)
+                                  .ToList();
             ViewBag.Laws = _context.Laws.FirstOrDefault(l => l.Id == id)?.shorttitle;
             ViewBag.Category = _context.Categories.ToList();
             return View(documents);
+
         }
     }
 }

@@ -16,11 +16,13 @@ namespace KnowledgeBase.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment;
         }
-        
-
         public IActionResult Index()
         {
-            var documents = _context.Documents.ToList();
+           // var documents = _context.Documents.ToList();
+            var documents = _context.Documents
+               .OrderByDescending(d => d.DateCreate)
+               .ThenBy(d => d.Id)
+               .ToList();
             ViewBag.Category = _context.Categories.ToList();
             return View(documents);
         }

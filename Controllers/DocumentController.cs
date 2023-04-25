@@ -38,12 +38,12 @@ namespace KnowledgeBase.Controllers
             return RedirectToAction("Details", new { id = document.Id });
         }
         // GET: DocumentController
-        public IActionResult Index()
-        {
-            var documents = _context.Documents.ToList();
-            ViewBag.Category = _context.Categories.ToList();
-            return View(documents);
-        }
+        //public IActionResult Index()
+        //{
+        //    var documents = _context.Documents.ToList();
+        //    ViewBag.Category = _context.Categories.ToList();
+        //    return View(documents);
+        //}
 
         // GET: DocumentController/Details/5
         public ActionResult Details(long? id)

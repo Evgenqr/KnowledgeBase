@@ -18,14 +18,17 @@ namespace KnowledgeBase.Controllers
         // GET: CategoryController1
         public ActionResult Index(int id)
         {
-            if (id < 1 || _context.Documents == null)
+            var category = _context.Categories.Find(id);
+            if (id < 1 || _context.Documents == null || category == null)
             {
                 return NotFound();
             }
             var documents = _context.Documents
-                .Where(d => d.CategoryId == id);
+                .Where(d => d.CategoryId == id)
+                .OrderByDescending(d => d.DateCreate)
+               .ThenBy(d => d.Id);
             ViewBag.Document = documents;
-            ViewBag.Category = _context.Categories.FirstOrDefault(c => c.Id == id)?.Title;
+            ViewBag.Category = _context.Categories.FirstOrDefault(c => c.Id == id).Title;
             return View(documents);
         }
 
