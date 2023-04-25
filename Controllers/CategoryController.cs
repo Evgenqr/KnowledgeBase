@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 namespace KnowledgeBase.Controllers
 {
@@ -13,23 +14,19 @@ namespace KnowledgeBase.Controllers
         public CategoryController(ApplicationDbContext context)
         {
             _context = context;
-            
         }
-        // GET: HomeController1
+        // GET: CategoryController1
         public ActionResult Index(int id)
         {
-            if (_context.Categories == null)
+            if (id < 1 || _context.Documents == null)
             {
                 return NotFound();
             }
             var documents = _context.Documents
-                .Include(c => c.Category)
-                .Where(с => с.CategoryId == id);
-            ViewBag.Category = _context.Categories.ToList();
+                .Where(d => d.CategoryId == id);
             ViewBag.Document = documents;
+            ViewBag.Category = _context.Categories.FirstOrDefault(c => c.Id == id)?.Title;
             return View(documents);
-
-
         }
 
         // GET: HomeController1/Create

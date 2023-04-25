@@ -14,14 +14,14 @@
     </a>
 </div>
 <b>Категория:</b>
-<a class="text-decoration-none" href="/category/@document.CategoryId/">
+<a class="text-decoration-none" href="/category/@document.CategoryId">
     @document.Category.Title
 </a>
 <br />
 <b>Отдел:</b>
 @if (document.Department != null){
 
-<a class="text-decoration-none" href="/departament/@document.DepartmentId/">
+<a class="text-decoration-none" href="/department/@document.DepartmentId">
     @document.Department.Title
 </a>
 }
@@ -31,7 +31,7 @@ else
 }
 <br />
 <b> Закон: </b>
-@if (document.Laws.Count > 0)
+@if (@document.Laws.Count > 0)
 {
      <span>
            @foreach (var l in document.Laws)
@@ -39,11 +39,11 @@ else
             @if (l.Title == "NoFz" && document.Laws.Count == 1)
             {
                 <span class="text-muted">Не указан</span>
-                @document.Laws.Remove(l);
+               @* @document.Laws.Remove(l);*@
             }
-            @if (l.Title != "NoFz" && document.Laws.Count > 1)
+            @if (l.Title != "NoFz" && document.Laws.Count >= 1)
             {
-                <a class="text-decoration-none" href="/laws/@l.Id/">
+                <a class="text-decoration-none" href="/laws/@l.Id">
                     @l.shorttitle
                 </a>
             }

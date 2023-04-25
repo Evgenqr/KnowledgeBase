@@ -1,10 +1,10 @@
-﻿@model IEnumerable<Document>
-@{
-
-    ViewData["Title"] = "Главная страница";
+﻿@{
+    var category = ViewBag.Category;
 }
-
-<h1>База знаний Курского УФАС России</h1>
+@{
+    ViewData["Title"] = category;
+}
+<h2>Документы с категорией @category</h2>
 <div class="grey-card">
     @foreach (var document in Model)
     {
@@ -17,16 +17,7 @@
             <div class="col-sm-2 text-right">
                 @document.DateCreate.ToShortDateString()
             </div>
-            <div class="row">
-                <div class="col-sm-9">
-                    <a href="/category/@document.CategoryId" class="badge badge-disabled" style="margin: 2px 0; padding: 6px 10px;">
-                       @document.Category.Title
-                    </a>
-                </div>
-
-            </div>
         </div>
-
     }
 </div>
 

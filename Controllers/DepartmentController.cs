@@ -16,14 +16,14 @@ namespace KnowledgeBase.Controllers
 
         public IActionResult Index(int id)
         {
-            if (_context.Departments == null)
+            if (id < 1 || _context.Departments == null)
             {
                 return NotFound();
             }
             var documents = _context.Documents
                 .Include(c => c.Category)
                 .Where(d => d.DepartmentId == id);
-            ViewBag.Departments = _context.Departments.ToList();
+            ViewBag.Departments = _context.Departments.FirstOrDefault(d => d.Id == id)?.Title;
             ViewBag.Documents = documents;
             ViewBag.Categories = _context.Categories.ToList();
             return View(documents);

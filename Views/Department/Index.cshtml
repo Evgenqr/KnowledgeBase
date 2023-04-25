@@ -1,21 +1,12 @@
-﻿@model IEnumerable<Document>
-@{
-    var department = (KnowledgeBase.Models.Department)ViewBag.Departments;
+﻿@{
+    var department = ViewBag.Departments;
 }
 @{
-    @if(department != null)
-    {
-        ViewData["Title"] = $"Отдел {ViewBag.Departments}";
-    }
+    ViewData["Title"] = department;
 }
-
-<h4 style="text-align: center;">
-    @if (department != null)
-    {
-        @department.Title;
-    }
-</h4>
-<h1>База знаний Курского УФАС России</h1>
+ <h4 style="text-align: center;">
+        @department
+    </h4>
 <div class="grey-card">
      @foreach (var document in Model)
     {
@@ -40,4 +31,3 @@
 
     }
 </div>
-

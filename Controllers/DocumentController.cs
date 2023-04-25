@@ -76,8 +76,6 @@ namespace KnowledgeBase.Controllers
                 {
                     if (file.Length > 0 && file.Length <= maxFileSize)
                     {
-                        Debug.WriteLine("============= " + file.Length);
-
                         var fileModel = new FileModel
                         {
                             Title = Path.GetRandomFileName(),

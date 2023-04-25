@@ -75,5 +75,10 @@ app.MapControllerRoute(
         pattern: "department/{id}",
         defaults: new { controller = "Department", action = "Index" });
 
+app.MapControllerRoute(
+        name: "LawIndex",
+        pattern: "laws/{id}",
+        defaults: new { controller = "Laws", action = "Index" });
+
 
 app.Run();
