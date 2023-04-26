@@ -69,7 +69,7 @@ namespace KnowledgeBase.Controllers
         private async Task<List<FileModel>> CreateFilesForDocumentAsync(Models.Document document, List<IFormFile> files)
         {
             var fileModels = new List<FileModel>();
-            string[] whiteListExtension = { ".txt", ".doc", ".doc", ".docx", ".rtf", ".odt", ".xls", ".xlsx", ".pdf",
+            string[] whiteListExtension = { ".txt", ".doc", ".docx", ".rtf", ".odt", ".xls", ".xlsx", ".pdf",
                 ".png", ".jpg", ".bmp", ".gif", ".ppt", ".pptx"};
             var maxFileSize = 20*1024*1024;
             if (files != null)
