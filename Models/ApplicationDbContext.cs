@@ -18,6 +18,7 @@ namespace KnowledgeBase.Data
         public DbSet<Department> Departments { get; set; }
         public DbSet<FileModel> Files { get; set; }
         public DbSet<Document> Documents { get; set; }
+        public DbSet<User> Users { get; set; }
 
         // Настройки подключения к БД
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)

@@ -1,5 +1,16 @@
-﻿namespace KnowledgeBase.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace KnowledgeBase.Models
 {
+    /// <summary>
+    /// Роли
+    /// </summary>
+   public enum Role
+    {
+        Administrator,
+        Moderator,
+        User
+    }
     /// <summary>
     /// Пользователь
     /// </summary>
@@ -16,10 +27,12 @@
         /// <summary>
         /// Пароль от учетной записи пользователя
         /// </summary>
+        /*[Required]*/
+        [DataType(DataType.Password)]
         public string Password { get; set; }
         /// <summary>
         /// Права доступа пользователя
         /// </summary>
-        public string Role { get; set; }
+        public Role Role { get; set; }
     }
 }

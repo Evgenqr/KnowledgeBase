@@ -54,6 +54,7 @@ namespace KnowledgeBase.Controllers
             }
             var document = _context.Documents
             .Where(d => d.Id == id)
+            .Include(u => u.User)
             .Include(c => c.Category)
             .Include(o => o.Department)
             .Include(l => l.Laws)

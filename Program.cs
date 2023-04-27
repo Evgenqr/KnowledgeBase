@@ -5,6 +5,8 @@ using System;
 using System.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using KnowledgeBase.Controllers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +22,13 @@ builder.Services.AddControllers(
     options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/login";
+        options.AccessDeniedPath = "/accessdenied";
+    });
+builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -39,6 +48,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -82,6 +92,10 @@ app.MapControllerRoute(
         name: "LawIndex",
         pattern: "laws/{id}",
         defaults: new { controller = "Laws", action = "Index" });
+app.MapControllerRoute(
+    name: "Loginform",
+    pattern: "/login",
+    defaults: new { controller = "Accaunt", action = "Login" });
 
 
 app.Run();
