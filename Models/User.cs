@@ -28,6 +28,8 @@ namespace KnowledgeBase.Models
         /// Пароль от учетной записи пользователя
         /// </summary>
         /*[Required]*/
+        //[Display(Name = "Запомнить?")]
+        //public bool RememberMe { get; set; }
         [DataType(DataType.Password)]
         public string Password { get; set; }
         /// <summary>
