@@ -1,4 +1,7 @@
-﻿@*
+﻿@{
+    var user = (KnowledgeBase.Models.User)ViewBag.User;
+}
+@*
     For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
 *@
 <header>
@@ -29,8 +32,13 @@
                     </li>
                     {% else %}*@
                     <li class="nav-item dropdown position-absolute top-0 end-0">
+                       
                         <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                            Личный кабинет
+                            Личный кабинет 
+                            @if (@user != null && @user.NickName != null)
+                            {
+                                @user.NickName
+                            }
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
                             <li><a class="dropdown-item" href="/">1</a></li>

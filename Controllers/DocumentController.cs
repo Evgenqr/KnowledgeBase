@@ -115,7 +115,7 @@ namespace KnowledgeBase.Controllers
             }
             return fileModels;
         }
-        [Authorize]
+     
         // GET: Create
         public IActionResult Create()
         {
@@ -127,7 +127,6 @@ namespace KnowledgeBase.Controllers
 
         // POST: Create
         [HttpPost]
-        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Title, CategoryId, DepartmentId, Laws, Text, File, FileId")] Models.Document document, int[] Laws, List<IFormFile> files)
         {
