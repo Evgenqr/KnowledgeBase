@@ -1,0 +1,50 @@
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<div class="col-sm-6">
+    <ul class="nav position-relative">
+        @if (SignInManager.IsSignedIn(User))
+        {
+        <li class="nav-item dropdown position-absolute top-0 end-0">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                @User.Identity?.Name
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown"> 
+                <li><a class="dropdown-item" href="{% url 'createdocument' %} ">Добавить документ</a></li>
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                        <li>
+                            <button type="submit" class="btn btn-light">Выйти</button>
+                        </li>
+                    </form>
+                </li>
+            </ul>
+        </li>
+        }
+        else
+        {
+        <li class="nav-item dropdown position-absolute top-0 end-0">
+            <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                Личный кабинет
+         
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
+                <li><a class="dropdown-item" asp-area="Identity" asp-page="/Account/Login">Авторизаци</a></li>
+                <li> <a class="dropdown-item" asp-area="Identity" asp-page="/Account/Register">Регистрация</a></li>
+            </ul>
+        </li>
+        }
+    </ul>
+    <div class="col-sm"> </div>
+    <div class="col-sm"> </div>
+    <div class="col-sm">
+        @*                 <form class="d-flex" action="{% url 'search' %}" method="get">
+        <input class="form-control me-2" name="q" type="search" placeholder="Поиск" aria-label="Поиск">
+        <button class="btn btn-outline-success" type="submit">Поиск</button>
+        </form>*@
+
+    </div>
+
+</div>

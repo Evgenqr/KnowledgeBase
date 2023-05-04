@@ -12,57 +12,7 @@
                     <img src="~/images/logo.png" alt="" width="250" height="110">
                 </a>
             </div>
-            <div class="col-sm-6">
-                <ul class="nav position-relative">
-                    @*                    {% if request.user.is_authenticated %}
-                    <li class="nav-item dropdown position-absolute top-0 end-0">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Имя
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                    <li><a class="dropdown-item" href="{% url 'createdocument' %} ">Добавить документ</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li>
-                    <form action="{% url 'logoutuser' %}" method="POST">
-                    {% csrf_token %}
-                    <li><button type="submit" class="btn btn-light">Выйти</button></li>
-                    </form>
-                    </li>
-                    </ul>
-                    </li>
-                    {% else %}*@
-                    <li class="nav-item dropdown position-absolute top-0 end-0">
-                       
-                        <a class="btn dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                            Личный кабинет 
-                            @if (@user != null && @user.NickName != null)
-                            {
-                                @user.NickName
-                            }
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown">
-                            <li><a class="dropdown-item" href="/">1</a></li>
-                            <li><a class="dropdown-item" href="/login" >Авторизаци</a></li>
-                            <li><a class="dropdown-item" href="/">3</a></li>
-
-                        </ul>
-                    </li>
-                    @*{% endif %}*@
-                </ul>
-                <div class="col-sm"> </div>
-                <div class="col-sm"> </div>
-                <div class="col-sm">
-                    @*                 <form class="d-flex" action="{% url 'search' %}" method="get">
-                    <input class="form-control me-2" name="q" type="search" placeholder="Поиск" aria-label="Поиск">
-                    <button class="btn btn-outline-success" type="submit">Поиск</button>
-                    </form>*@
-
-                </div>
-
-            </div>
-
-        </div>
-
+            <partial name="_LoginPartial" />
         <nav class="navbar navbar-expand-lg navbar-dark" style="background-color:#007c84;">
             <ul class="navbar-nav mr-auto mb-3 mb-lg-0 ">
                 <li class="nav-item dropdown">
@@ -91,13 +41,9 @@
                         Акты органов прокуратуры
                     </a>
                 </li>
-
             </ul>
-
-
         </nav>
     </div>
 </header>
-
-    @await Html.PartialAsync("Scripts")
+@await Html.PartialAsync("Scripts")
 

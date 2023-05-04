@@ -23,13 +23,13 @@ namespace KnowledgeBase.Models
         /// <summary>
         /// Имя пользователя
         /// </summary>
-        public string NickName { get; set; }
+        public string Username { get; set; }
         /// <summary>
         /// Пароль от учетной записи пользователя
         /// </summary>
         /*[Required]*/
-        //[Display(Name = "Запомнить?")]
-        //public bool RememberMe { get; set; }
+        [Display(Name = "Запомнить?")]
+        public bool RememberMe { get; set; }
         [DataType(DataType.Password)]
         public string Password { get; set; }
         /// <summary>
