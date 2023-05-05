@@ -1,20 +1,56 @@
-html {
-  font-size: 14px;
+html navbar-right{
+font-size: 14px;
 }
+
 
 @media (min-width: 768px) {
   html {
     font-size: 16px;
   }
 }
-
+/*navbar-right
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}*/
+.btn-xs, .btn-group-xs > .btn {
+    padding: 1px 5px;
+    font-size: 12px;
+    line-height: 1.5;
+    border-radius: 3px;
+}
+
+
+.navbar-btn.btn-xs {
+    margin-top: 14px;
+    margin-bottom: 14px;
+}
+
+.navbar-right {
+    float: right !important;
+    margin-right: -15px
+}
+
+.navbar-right ~ .navbar-right {
+        margin-right: 0
+    }
+.navbar-btn.btn-sm {
+    margin-top: 10px;
+    margin-bottom: 10px
+}
+
+.navbar-btn.btn-xs {
+    margin-top: 14px;
+    margin-bottom: 14px
+}
+
+.navbar-text {
+    margin-top: 15px;
+    margin-bottom: 15px
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {

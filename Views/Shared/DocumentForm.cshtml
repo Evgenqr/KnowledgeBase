@@ -95,8 +95,14 @@
             }
     </div>
     </div>
-    <div class="col-sm-6">
-            <button class="btn btn-info" type="submit">@((Model != null && Model.Id > 0) ? "Сохранить изменения" : "Создать")</button>
+    <div class="panel-footer text-right">
+
+        @Html.ActionLink("Отмена", "Index")
+
+        @Html.ActionLink("Отмена", ((Model != null && Model.Id > 0) ? "Index" : "Details"))
+        @Html.ActionLink("Отмена", "Details", new { id = Model.Id }, new { @class = "btn btn-default" })
+
+        <button class="btn btn-primary" type="submit">@((Model != null && Model.Id > 0) ? "Сохранить изменения" : "Создать")</button>
     </div>
     
 }
