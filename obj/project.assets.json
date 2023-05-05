@@ -10344,7 +10344,7 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\MonoPC\\.nuget\\packages\\": {}
+    "C:\\Users\\EQr\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
@@ -10352,11 +10352,11 @@
       "projectUniqueName": "E:\\Programs\\Programming\\Sharp\\KnowledgeBase\\KnowledgeBase.csproj",
       "projectName": "KnowledgeBase",
       "projectPath": "E:\\Programs\\Programming\\Sharp\\KnowledgeBase\\KnowledgeBase.csproj",
-      "packagesPath": "C:\\Users\\MonoPC\\.nuget\\packages\\",
+      "packagesPath": "C:\\Users\\EQr\\.nuget\\packages\\",
       "outputPath": "E:\\Programs\\Programming\\Sharp\\KnowledgeBase\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\MonoPC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\EQr\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

@@ -101,16 +101,11 @@ namespace KnowledgeBase.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("DepartmentId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Documents");
                 });
@@ -170,33 +165,6 @@ namespace KnowledgeBase.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Laws");
-                });
-
-            modelBuilder.Entity("KnowledgeBase.Models.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("RememberMe")
-                        .HasColumnType("boolean");
-
-                    b.Property<int>("Role")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -426,17 +394,9 @@ namespace KnowledgeBase.Migrations
                         .WithMany()
                         .HasForeignKey("DepartmentId");
 
-                    b.HasOne("KnowledgeBase.Models.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Category");
 
                     b.Navigation("Department");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("KnowledgeBase.Models.FileModel", b =>

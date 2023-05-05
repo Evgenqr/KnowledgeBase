@@ -7,16 +7,10 @@
 <h4 class="card-title">
     @document.Title
 </h4>
+@*Если у пользователя есть права:*@
 <div class="navbar-right">
     <a asp-action="Edit" class="btn btn-xs btn-info navbar-btn" asp-route-id="@document.Id">Редактировать</a>
-    <a asp-action="Delete" class="btn btn-xs btn-danger navbar-btn" asp-route-id="@document.Id">Удалить документ</a>
-</div>
-
-<div class="editdoc">
-    @*{% if request.user.is_authenticated %}*@
-    <a class="text-decoration-none" href="/document/@document.Id/edit">
-        Редактировать
-    </a>
+    <a asp-action="Delete" class="btn btn-xs btn-danger navbar-btn" asp-route-id="@document.Id">Удалить</a>
 </div>
 <b>Категория:</b>
 <a class="text-decoration-none" href="/category/@document.CategoryId">
@@ -90,7 +84,7 @@ else
     <span class="text-muted">Не указана</span>
 }
 <br />
-Автор: @document.User.Username
+Автор: 
 
 @section Scripts {
     <script>

@@ -38,7 +38,7 @@ app.MapRazorPages();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Document}/{action=Index}");
 
 app.MapControllerRoute(
         name: "DocumentDetails",
@@ -57,10 +57,10 @@ app.MapControllerRoute(
         pattern: "document/delete/{id}",
         defaults: new { controller = "Document", action = "Delete" });
 
-app.MapControllerRoute(
-        name: "DocumentEdit",
-        pattern: "document/{id}/edit",
-        defaults: new { controller = "Document", action = "Edit" });
+//app.MapControllerRoute(
+//        name: "DocumentEdit",
+//        pattern: "document/{id}/edit",
+//        defaults: new { controller = "Document", action = "Edit" });
 
 app.MapControllerRoute(
         name: "CategoryIndex",

@@ -40,7 +40,11 @@ namespace KnowledgeBase.Controllers
         // GET: DocumentController
         public IActionResult Index()
         {
-            var documents = _context.Documents.ToList();
+            // var documents = _context.Documents.ToList();
+            var documents = _context.Documents
+               .OrderByDescending(d => d.DateCreate)
+               .ThenBy(d => d.Id)
+               .ToList();
             ViewBag.Category = _context.Categories.ToList();
             return View(documents);
         }
@@ -54,7 +58,6 @@ namespace KnowledgeBase.Controllers
             }
             var document = _context.Documents
             .Where(d => d.Id == id)
-            .Include(u => u.User)
             .Include(c => c.Category)
             .Include(o => o.Department)
             .Include(l => l.Laws)
@@ -77,8 +80,7 @@ namespace KnowledgeBase.Controllers
             {
                 //var allowedFileTypes = new string[] { ".pdf", ".doc", ".docx" };
                 //if (!allowedFileTypes.Contains(Path.GetExtension(file.FileName).ToLowerInvariant()))
-
-                    foreach (var file in files)
+                foreach (var file in files)
                 {
                     if (file.Length > 0 && file.Length <= maxFileSize)
                     {
@@ -134,7 +136,7 @@ namespace KnowledgeBase.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    document.DateCreate = DateTime.UtcNow;
+                    
                     List<Law> selectedLaws = new();
                     if (Laws != null)
                     {
@@ -149,7 +151,9 @@ namespace KnowledgeBase.Controllers
                     }
                     document.Laws = selectedLaws;
                 }
+                document.DateCreate = DateTime.UtcNow;
                 _context.Add(document);
+                Debug.WriteLine(DateTime.UtcNow + " ++++++++++++++++++++++ " + document.DateCreate);
                 await _context.SaveChangesAsync();
                 // Создаем файлы для документа
                 document.Files = await CreateFilesForDocumentAsync(document, files);
@@ -339,7 +343,7 @@ namespace KnowledgeBase.Controllers
                 _context.Documents.Remove(document);
             }
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Document");
         }
 
         private bool DocumentExists(long id)

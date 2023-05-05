@@ -92,21 +92,6 @@ namespace KnowledgeBase.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "User",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    NickName = table.Column<string>(type: "text", nullable: false),
-                    Password = table.Column<string>(type: "text", nullable: false),
-                    Role = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_User", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -219,7 +204,6 @@ namespace KnowledgeBase.Migrations
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Title = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    UserId = table.Column<int>(type: "integer", nullable: false),
                     CategoryId = table.Column<int>(type: "integer", nullable: false),
                     DepartmentId = table.Column<int>(type: "integer", nullable: true),
                     Text = table.Column<string>(type: "text", nullable: true),
@@ -240,12 +224,6 @@ namespace KnowledgeBase.Migrations
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Documents_User_UserId",
-                        column: x => x.UserId,
-                        principalTable: "User",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -348,11 +326,6 @@ namespace KnowledgeBase.Migrations
                 column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Documents_UserId",
-                table: "Documents",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Files_DocumentId",
                 table: "Files",
                 column: "DocumentId");
@@ -399,9 +372,6 @@ namespace KnowledgeBase.Migrations
 
             migrationBuilder.DropTable(
                 name: "Departments");
-
-            migrationBuilder.DropTable(
-                name: "User");
         }
     }
 }
