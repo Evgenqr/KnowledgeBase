@@ -1,7 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
 @inject UserManager<IdentityUser> UserManager
-
 <div class="col-sm-6">
     <ul class="nav position-relative">
         @if (SignInManager.IsSignedIn(User))
@@ -9,9 +8,10 @@
         <li class="nav-item dropdown position-absolute top-0 end-0">
             <a class="nav-link dropdown-toggle" href="#" id="navbarScrollingDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 @User.Identity?.Name
-            </a>
+                </a>
             <ul class="dropdown-menu" aria-labelledby="navbarScrollingDropdown"> 
-                <li><a class="dropdown-item" href="{% url 'createdocument' %} ">Добавить документ</a></li>
+                    <li><a class="dropdown-item" href="/create">Добавить документ</a></li>
+                    <li><a class="dropdown-item" href="/Identity/Account/Register">Регистрация нового пользователя</a></li>
                 <li><hr class="dropdown-divider"></li>
                 <li>
                     <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
