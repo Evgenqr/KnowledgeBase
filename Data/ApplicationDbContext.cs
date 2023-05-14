@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace KnowledgeBase.Data
 {
-    public class ApplicationDbContext : IdentityDbContext   // DbContext  // IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext   //DbContext 
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -18,7 +18,6 @@ namespace KnowledgeBase.Data
         public DbSet<Department> Departments { get; set; }
         public DbSet<FileModel> Files { get; set; }
         public DbSet<Document> Documents { get; set; }
-       // public DbSet<User> User { get; set; }
 
         // Настройки подключения к БД
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -29,17 +28,14 @@ namespace KnowledgeBase.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
+           // base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<IdentityUserLogin<string>>().HasKey(x => new { x.ProviderKey, x.LoginProvider });
+            modelBuilder.Entity<IdentityUserToken<string>>()
+       .HasKey(t => new { t.UserId, t.LoginProvider, t.Name });
+            modelBuilder.Entity<IdentityUserRole<string>>()
+       .HasKey(ur => new { ur.UserId, ur.RoleId });
             modelBuilder.Entity<Document>()
                 .HasKey(d => new { d.Id });
-            modelBuilder.Entity<IdentityUserRole<string>>()
-        .HasKey(ur => new { ur.UserId, ur.RoleId });
         }
     }
 }
-
-
-
-
-

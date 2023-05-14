@@ -1,6 +1,8 @@
 using KnowledgeBase.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +11,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddControllers(
+    options => options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true);
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
@@ -34,11 +38,10 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapRazorPages();
-
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Document}/{action=Index}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
 
 app.MapControllerRoute(
         name: "DocumentDetails",
@@ -57,10 +60,10 @@ app.MapControllerRoute(
         pattern: "document/delete/{id}",
         defaults: new { controller = "Document", action = "Delete" });
 
-//app.MapControllerRoute(
-//        name: "DocumentEdit",
-//        pattern: "document/{id}/edit",
-//        defaults: new { controller = "Document", action = "Edit" });
+app.MapControllerRoute(
+        name: "DocumentEdit",
+        pattern: "document/{id}/edit",
+        defaults: new { controller = "Document", action = "Edit" });
 
 app.MapControllerRoute(
         name: "CategoryIndex",
@@ -76,13 +79,6 @@ app.MapControllerRoute(
         name: "LawIndex",
         pattern: "laws/{id}",
         defaults: new { controller = "Laws", action = "Index" });
-app.MapControllerRoute(
-    name: "Loginform",
-    pattern: "/login",
-    defaults: new { controller = "Account", action = "Login" });
-
-
-
 
 
 app.Run();

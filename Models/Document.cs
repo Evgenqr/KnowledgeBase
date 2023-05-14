@@ -18,12 +18,8 @@ namespace KnowledgeBase.Models
         /// <summary>
         /// Автор документа
         /// </summary>
-        //[Display(Name = "Автор")]
-       // public AspNetUsers User { get; set; }
-        /// <summary>
-        /// Id пользователя
-        /// </summary>
-        //public int UserId { get; set; }
+        //[Display(Name = "Пользователь")]
+        //public User User { get; set; }
         /// <summary>
         /// Id категории
         /// </summary>

@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,6 +8,7 @@
 </head>
 <body>
     @await Html.PartialAsync("Header")
+
     <div class="container">
         <div class="row">
             <div class="col-sm-12">
@@ -15,17 +16,9 @@
             </div>
         </div>
     </div>
+
     @await Html.PartialAsync("Footer")
+    @*@await Html.PartialAsync("Scripts")*@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-

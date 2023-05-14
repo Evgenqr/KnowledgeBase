@@ -52,9 +52,7 @@
     <div class="description col-sm-12">
         Максимальный размер файла: <strong>20 МБ</strong>.
         <br>Разрешённые типы файлов:
-        <strong>
-            txt doc docx rtf odt xls xlsx pdf png jpg bmp gif ppt pptx
-        </strong>.
+        <strong>txt doc docx xls xlsx pdf png jpg bmp ppt pptx rtf gif</strong>.
     
     <div class="file">
         @if (Model != null && Model.Files != null && Model.Files.Any())
@@ -95,14 +93,8 @@
             }
     </div>
     </div>
-    <div class="panel-footer text-right">
-
-
-
-        @Html.ActionLink("Отмена", ((Model != null && Model.Id > 0) ? "Details" : "Index" ), new { id = Model?.Id })
-      @*  @Html.ActionLink("Отмена", "Details", new { id = Model.Id }, new { @class = "btn btn-default" })*@
-
-        <button class="btn btn-primary" type="submit">@((Model != null && Model.Id > 0) ? "Сохранить изменения" : "Создать")</button>
+    <div class="col-sm-6">
+            <button class="btn btn-info" type="submit">@((Model != null && Model.Id > 0) ? "Сохранить изменения" : "Создать")</button>
     </div>
     
 }

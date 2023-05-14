@@ -61,15 +61,18 @@ namespace KnowledgeBase.Areas.Identity.Pages.Account
         public class InputModel
         {
             /// <summary>
-            ///     Имя пользователя
+            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+            ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required(ErrorMessage = "Введите имя пользователя")]
-            public string Username { get; set; }
+            [Required]
+            [EmailAddress]
+            public string Email { get; set; }
 
-          /// <summary>
-          /// Пароль
-          /// </summary>
-            [Required(ErrorMessage = "Введите пароль")]
+            /// <summary>
+            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
+            ///     directly from your code. This API may change or be removed in future releases.
+            /// </summary>
+            [Required]
             [DataType(DataType.Password)]
             public string Password { get; set; }
 
@@ -77,7 +80,7 @@ namespace KnowledgeBase.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Display(Name = "Запомнить меня?")]
+            [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
         }
 
@@ -108,7 +111,7 @@ namespace KnowledgeBase.Areas.Identity.Pages.Account
             {
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-                var result = await _signInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
@@ -125,7 +128,7 @@ namespace KnowledgeBase.Areas.Identity.Pages.Account
                 }
                 else
                 {
-                    ModelState.AddModelError(string.Empty, "Неправильное имя пользователя/пароль.");
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
                     return Page();
                 }
             }

@@ -38,16 +38,12 @@ namespace KnowledgeBase.Controllers
             return RedirectToAction("Details", new { id = document.Id });
         }
         // GET: DocumentController
-        public IActionResult Index()
-        {
-            // var documents = _context.Documents.ToList();
-            var documents = _context.Documents
-               .OrderByDescending(d => d.DateCreate)
-               .ThenBy(d => d.Id)
-               .ToList();
-            ViewBag.Category = _context.Categories.ToList();
-            return View(documents);
-        }
+        //public IActionResult Index()
+        //{
+        //    var documents = _context.Documents.ToList();
+        //    ViewBag.Category = _context.Categories.ToList();
+        //    return View(documents);
+        //}
 
         // GET: DocumentController/Details/5
         public ActionResult Details(long? id)
@@ -73,14 +69,15 @@ namespace KnowledgeBase.Controllers
         private async Task<List<FileModel>> CreateFilesForDocumentAsync(Models.Document document, List<IFormFile> files)
         {
             var fileModels = new List<FileModel>();
-            string[] whiteListExtension = { ".txt", ".doc", ".docx", ".rtf", ".odt", ".xls", ".xlsx", ".pdf",
+            string[] whiteListExtension = { ".txt", ".doc", ".doc", ".docx", ".rtf", ".odt", ".xls", ".xlsx", ".pdf",
                 ".png", ".jpg", ".bmp", ".gif", ".ppt", ".pptx"};
             var maxFileSize = 20*1024*1024;
             if (files != null)
             {
                 //var allowedFileTypes = new string[] { ".pdf", ".doc", ".docx" };
                 //if (!allowedFileTypes.Contains(Path.GetExtension(file.FileName).ToLowerInvariant()))
-                foreach (var file in files)
+
+                    foreach (var file in files)
                 {
                     if (file.Length > 0 && file.Length <= maxFileSize)
                     {
@@ -117,7 +114,7 @@ namespace KnowledgeBase.Controllers
             }
             return fileModels;
         }
-     
+
         // GET: Create
         public IActionResult Create()
         {
@@ -136,7 +133,7 @@ namespace KnowledgeBase.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    
+                    document.DateCreate = DateTime.UtcNow;
                     List<Law> selectedLaws = new();
                     if (Laws != null)
                     {
@@ -151,9 +148,7 @@ namespace KnowledgeBase.Controllers
                     }
                     document.Laws = selectedLaws;
                 }
-                document.DateCreate = DateTime.UtcNow;
                 _context.Add(document);
-                Debug.WriteLine(DateTime.UtcNow + " ++++++++++++++++++++++ " + document.DateCreate);
                 await _context.SaveChangesAsync();
                 // Создаем файлы для документа
                 document.Files = await CreateFilesForDocumentAsync(document, files);
@@ -343,7 +338,7 @@ namespace KnowledgeBase.Controllers
                 _context.Documents.Remove(document);
             }
             await _context.SaveChangesAsync();
-            return RedirectToAction("Index", "Document");
+            return RedirectToAction("Index", "Home");
         }
 
         private bool DocumentExists(long id)
