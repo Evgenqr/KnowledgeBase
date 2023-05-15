@@ -105,14 +105,14 @@ namespace KnowledgeBase.Controllers
                         }
                         else
                         {
-                            
+
                             ViewData["Error"] = "Выбранный файл не может быть загружен. Возможно загрузка файлов только со следующими расширениями:";
-                            
                         }
                     }
                 }
             }
-            return fileModels;
+            return (fileModels);
+           // return fileModels;
         }
 
         // GET: Create
@@ -121,6 +121,7 @@ namespace KnowledgeBase.Controllers
             ViewBag.Category = _context.Categories.ToList();
             ViewBag.Department = _context.Departments.ToList();
             ViewBag.Laws = _context.Laws.ToList();
+            
             return View();
         }
 
@@ -184,6 +185,7 @@ namespace KnowledgeBase.Controllers
             ViewBag.Department = _context.Departments.ToList();
             ViewBag.Laws = _context.Laws.ToList();
             ViewBag.Files = _context.Files.ToList();
+            
             return View(document);
         }
 
@@ -258,10 +260,7 @@ namespace KnowledgeBase.Controllers
                     }
                     // Сохраняем изменения в общий список файлов в документе
                     document.Files = await CreateFilesForDocumentAsync(document, files);
-                    foreach (var df in document.Files)
-                    {
-                        Debug.WriteLine("+++++++++++++" + df.Extension);
-                    }
+                    
                     if (files == null) 
                     {
                         document.Files = originalDocument.Files;

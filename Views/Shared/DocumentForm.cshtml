@@ -54,44 +54,34 @@
         <br>Разрешённые типы файлов:
         <strong>txt doc docx xls xlsx pdf png jpg bmp ppt pptx rtf gif</strong>.
     
-    <div class="file">
-        @if (Model != null && Model.Files != null && Model.Files.Any())
-        {
-            <p>Приложения:</p>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Имя файла</th>
-                        <th>Удалить</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var file in Model.Files)
-                    {
-                         <tr class="file" id="document-@file.DocumentId-@file.Id">
-                            <td>
-                                    <p class="filelogo">
-                                @file.RealTitle@file.Extension
-                                    </p>
-                                    <hr>
-                                </td>
-                            <td>
-                                <button class="btn btn-link  text-decoration-none del-file" data-bk="@file.DocumentId" data-pg="@file.Id" style="color: #6b2525;">Удалить</button>
-                                <hr>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            <input type="hidden" name="arr_of_id" id="arr_of_id">
-        }
+        <div class="file">
+            @if (Model != null && Model.Files != null && Model.Files.Any())
+            {
+                    <p>Приложения:</p>
+                    <table class="table table-hover">
+                        <tbody>
+                            @foreach (var file in Model.Files)
+                            {
+                                <tr class="file" id="document-@file.DocumentId-@file.Id">
+                                    <th scope="row">
+                                        <p class="filelogo">
+                                            @file.RealTitle@file.Extension
+                                        </p>
+                                    </th>
+                                    <td><button class="btn btn-link  text-decoration-none del-file" data-bk="@file.DocumentId" data-pg="@file.Id" style="color: #6b2525;">Удалить</button></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                <input type="hidden" name="arr_of_id" id="arr_of_id">
+            }
             @if (ViewData["Error"] != null)
             {
                 <div class="alert alert-danger">
                     <strong>Ошибка!</strong> @ViewData["Error"]
                 </div>
             }
-    </div>
+        </div>
     </div>
     <div class="col-sm-6">
             <button class="btn btn-info" type="submit">@((Model != null && Model.Id > 0) ? "Сохранить изменения" : "Создать")</button>

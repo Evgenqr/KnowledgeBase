@@ -5,8 +5,9 @@
         @foreach (var file in Model.Files)
         {
             <li>
-                <span> @file.Title</span>
-                <input type="checkbox" name="DeletedFiles" value="@file.Id" />
+                <span> @file.Title
+                    <input type="checkbox" name="DeletedFiles" value="@file.Id" />
+                </span>
             </li>
         }
     </ul>
