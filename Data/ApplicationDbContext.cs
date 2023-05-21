@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.Extensions.Options;
 
 namespace KnowledgeBase.Data
 {
@@ -30,12 +31,16 @@ namespace KnowledgeBase.Data
         {
            // base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<IdentityUserLogin<string>>().HasKey(x => new { x.ProviderKey, x.LoginProvider });
-            modelBuilder.Entity<IdentityUserToken<string>>()
-       .HasKey(t => new { t.UserId, t.LoginProvider, t.Name });
-            modelBuilder.Entity<IdentityUserRole<string>>()
-       .HasKey(ur => new { ur.UserId, ur.RoleId });
-            modelBuilder.Entity<Document>()
-                .HasKey(d => new { d.Id });
+            modelBuilder.Entity<IdentityUserToken<string>>().HasKey(t => new { t.UserId, t.LoginProvider, t.Name });
+            modelBuilder.Entity<IdentityUserRole<string>>().HasKey(ur => new { ur.UserId, ur.RoleId });
+
+            modelBuilder.Entity<Document>().HasKey(d => new { d.Id });
         }
+
+    
+
+
+
+
     }
 }
