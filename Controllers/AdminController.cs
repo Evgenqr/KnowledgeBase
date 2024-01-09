@@ -50,13 +50,11 @@ namespace KnowledgeBase.Controllers
                 return View();
             }
         }
-
         // GET: RoleController1/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
-
         // POST: RoleController1/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
