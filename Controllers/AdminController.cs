@@ -19,7 +19,7 @@ namespace KnowledgeBase.Controllers
         // GET: RoleController1
         public IActionResult Index()
         {
-            var roles = _roleManager.Roles;
+            //var roles = _roleManager.Roles;
             var users = _userManager.Users;
             return View(users);
         }
