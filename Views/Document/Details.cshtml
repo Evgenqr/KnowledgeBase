@@ -61,7 +61,7 @@ else{
 {
    <b> Приложения: </b>
     <div class="file">
-      @*  id="documents_@document.Id"*@
+
              @foreach (var file in document.Files)
             {
                 <div class="file" id="file_@file.Id">
@@ -77,6 +77,7 @@ else{
 <b>Дата создания:</b> @document.DateCreate.ToShortDateString()
 <br>
 <b> Дата обновления: </b>
+      @*  id="documents_@document.Id"*@
 @if (document.DateUpdate.HasValue)
 {
     @document.DateUpdate.Value.ToShortDateString()
