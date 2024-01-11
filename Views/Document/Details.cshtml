@@ -8,6 +8,7 @@
     @document.Title
 </h4>
 <div class="editdoc">
+    @*{% if request.user.is_authenticated %}*@
     <div class="navbar-right">
         <a asp-action="Edit" class="btn btn-xs btn-info navbar-btn" asp-route-id="@document.Id">Редактировать</a>
         <a asp-action="Delete" class="btn btn-xs btn-danger navbar-btn" asp-route-id="@document.Id">Удалить</a>
@@ -39,6 +40,7 @@ else
             @if (l.Title == "NoFz" && document.Laws.Count == 1)
             {
                 <span class="text-muted">Не указан</span>
+               @* @document.Laws.Remove(l);*@
             }
             @if (l.Title != "NoFz" && document.Laws.Count >= 1)
             {
@@ -59,6 +61,7 @@ else{
 {
    <b> Приложения: </b>
     <div class="file">
+      @*  id="documents_@document.Id"*@
              @foreach (var file in document.Files)
             {
                 <div class="file" id="file_@file.Id">
@@ -82,5 +85,6 @@ else
 {
     <span class="text-muted">Не указана</span>
 }
+@*  Автор: *@
 
 <script src="~/js/scripts.js"></script>
