@@ -7,7 +7,8 @@
         <div class="col-md-8 mx-auto">
             @await Html.PartialAsync("DocumentForm")
             <div class="col-md-8 mx-auto">
-                <a asp-action="Delete" class="btn btn-danger" asp-route-id="@Model.Id">Удалить документ</a>
+                <a asp-action="Delete" class="btn btn-danger" asp-route-id="@Model.Id">
+                    Удалить</a>
             </div>
             <div class="col-md-8 mx-auto">
                 @Html.ActionLink("Отмена", "Details", new { id = Model.Id })
